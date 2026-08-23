@@ -429,6 +429,7 @@ const DAYS = [
       {
         time: '☀️  Afternoon', id: 'afternoon',
         items: [
+          { id: 'checkin-sat',     emoji: '🔑', name: 'Check-in — Lily\'s Farm Studio', desc: 'Check-in is from 4:00pm. Settle into the studio on the edge of Wombat State Forest, unpack, maybe spot a kangaroo before heading out for the evening', tag: 'Check-in', duration: 180, area: 'wheatsheaf', img: wombat, maps: 'https://www.airbnb.com.au/rooms/33254784' },
           { id: 'vincent-st',      emoji: '🛍️', name: 'Vincent Street',               desc: 'Browse boutiques, galleries & specialty shops along Daylesford\'s charming main street',          tag: 'Explore',    duration: 60, area: 'daylesford', img: mainst,      maps: 'https://maps.google.com/?q=Vincent+Street+Daylesford+VIC' },
           { id: 'lake-walk-sat',   emoji: '🚶', name: 'Lake Daylesford Walk',           desc: 'Flat, easy 4.7km loop around the lake (~1hr) — passes Wombat Flat & Central mineral springs',        tag: 'Nature',     duration: 60, area: 'daylesford', img: lake,        maps: 'https://maps.google.com/?q=Lake+Daylesford+Victoria' },
           { id: 'convent-sat',     emoji: '🎨', name: 'The Convent Gallery',            desc: 'Seven art galleries, chapel & museum in a stunning former convent building',                        tag: 'Culture',    duration: 60, area: 'daylesford', img: convent,     maps: 'https://maps.google.com/?q=The+Convent+Gallery+Daylesford+Victoria' },
@@ -445,6 +446,7 @@ const DAYS = [
           { id: 'cliffys-sat',     emoji: '🥗', name: 'Cliffy\'s Emporium',            desc: 'Beloved local favourite with fresh, seasonal dishes in a cosy setting',                             tag: 'Casual',     duration: 75, area: 'daylesford', img: cliffys,     maps: 'https://maps.google.com/?q=Cliffy%27s+Emporium+Daylesford+Victoria' },
           { id: 'daylesford-hotel-sat', emoji: '🏠', name: 'Daylesford Hotel',         desc: 'Classic country pub with good food, a beer garden, wood-fired pizza & sunset balcony views',      tag: 'Pub',        duration: 90, area: 'daylesford', img: dlHotel,     maps: 'https://maps.google.com/?q=Daylesford+Hotel+Victoria' },
           { id: 'hepburn-bath-sat',emoji: '♨️', name: 'Hepburn Bathhouse — Evening Soak', desc: 'Unwind in the mineral pools after the drive — the perfect way to arrive in spa country',      tag: 'Spa',        duration: 90, area: 'hepburn', img: bathhouse,   maps: 'https://maps.google.com/?q=Hepburn+Bathhouse+and+Spa+Hepburn+Springs+Victoria' },
+          { id: 'airbnb-spa-sat',  emoji: '🛁', name: 'Sauna & Spa Soak — Lily\'s Farm Studio', desc: 'Your complimentary session in the private outdoor hot tub or traditional Finnish sauna, right at the studio — the perfect late-night wind-down', tag: '⭐ Included', hot: true, duration: 75, area: 'wheatsheaf', img: bathhouse, maps: 'https://www.airbnb.com.au/rooms/33254784' },
         ]
       }
     ]
@@ -506,6 +508,7 @@ const DAYS = [
       {
         time: '🌅  Morning', id: 'morning',
         items: [
+          { id: 'checkout-mon',    emoji: '🧳', name: 'Pack Up & Check Out',            desc: 'Checkout is by 10:00am. Last coffee on the porch before heading back into town for the day',       tag: 'Checkout',   duration: 60, area: 'wheatsheaf', img: wombat, maps: 'https://www.airbnb.com.au/rooms/33254784' },
           { id: 'lake-walk-mon',   emoji: '🚶', name: 'Lake Daylesford Walk',           desc: 'A peaceful 4.7km lakeside loop (~1hr) to start the final morning',                                 tag: 'Nature',     duration: 60, area: 'daylesford', img: lake,        maps: 'https://maps.google.com/?q=Lake+Daylesford+Victoria' },
           { id: 'convent-mon',     emoji: '🎨', name: 'The Convent Gallery',            desc: 'Explore the seven gallery spaces, chapel & museum before heading home',                            tag: 'Culture',    duration: 60, area: 'daylesford', img: convent,     maps: 'https://maps.google.com/?q=The+Convent+Gallery+Daylesford+Victoria' },
           { id: 'mill-markets-mon',emoji: '🏺', name: 'Mill Markets',                  desc: 'Last chance for antique treasures before hitting the road',                                         tag: 'Shopping',   duration: 60, area: 'daylesford', img: millMkts,    maps: 'https://maps.google.com/?q=The+Mill+Markets+Daylesford+Victoria' },
@@ -542,6 +545,10 @@ const AREA_TRAVEL = {
   'sailorsfalls|trentham': 15,  'musk|musk': 5,               'musk|mtfranklin': 15,
   'musk|trentham': 15,          'mtfranklin|mtfranklin': 5,   'mtfranklin|trentham': 10,
   'trentham|trentham': 5,
+  // Lily's Farm Studio (our Airbnb) — Wheatsheaf, ~10min NE of Daylesford on the Wombat State Forest edge
+  'daylesford|wheatsheaf': 10,  'hepburn|wheatsheaf': 12,     'jubilee|wheatsheaf': 12,
+  'sailorsfalls|wheatsheaf': 15,'musk|wheatsheaf': 15,        'mtfranklin|wheatsheaf': 20,
+  'trentham|wheatsheaf': 15,    'wheatsheaf|wheatsheaf': 3,
 };
 function getTravelTime(a, b) {
   if (!a || !b) return 10; // unknown location (e.g. a custom activity) — flat estimate
@@ -565,7 +572,7 @@ function parseClock(hhmm) {
 function computeSchedule(dayIdx) {
   const items = plan.filter(p => p.day === dayIdx);
   let current = parseClock(dayStart[dayIdx]);
-  let prevArea = 'daylesford'; // assume starting from accommodation in town
+  let prevArea = 'wheatsheaf'; // each day actually starts from Lily's Farm Studio (our Airbnb)
   return items.map(p => {
     const area = p.area || prevArea;
     const travel = getTravelTime(prevArea, area);
@@ -582,9 +589,9 @@ function computeSchedule(dayIdx) {
 // ─── DEFAULT PLAN ───────────────────────────────────────────
 // A curated full weekend so there's something to edit from rather than a blank slate.
 const DEFAULT_PLAN_IDS = [
-  'lake-walk-sat', 'vincent-st', 'lake-house-sat',
+  'checkin-sat', 'lake-house-sat', 'airbnb-spa-sat',
   'sunday-market', 'tipperary-track', 'farmers-arms', 'hepburn-spa-sun', 'kadota',
-  'lake-walk-mon', 'frank-connie-mon'
+  'checkout-mon', 'lake-walk-mon', 'frank-connie-mon'
 ];
 
 // ─── STATE ──────────────────────────────────────────────────
@@ -596,7 +603,8 @@ let plan = [];
 let customCounter = 0;
 let sortables = [];
 let viewMode = 'list'; // 'list' | 'timeline'
-let dayStart = ['14:00', '08:00', '08:00']; // editable per-day start time, "HH:MM"
+// Sat starts at check-in (4pm). Sun is the sleep-in day. Mon is capped by 10am checkout.
+let dayStart = ['16:00', '10:30', '08:00']; // editable per-day start time, "HH:MM"
 
 // ─── INIT ───────────────────────────────────────────────────
 function init() {
