@@ -1,0 +1,892 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Daylesford Weekend 🌿</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --green: #2d6348;
+      --green-dark: #1e4030;
+      --green-light: #e8f3ee;
+      --amber: #c9843a;
+      --amber-light: #fdf0e0;
+      --bg: #f2ede6;
+      --card: #ffffff;
+      --text: #1e1e1e;
+      --muted: #888;
+      --border: #e8e4df;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      -webkit-font-smoothing: antialiased;
+      overscroll-behavior: none;
+    }
+
+    /* ─── Header ─── */
+    .header {
+      background: linear-gradient(160deg, var(--green-dark) 0%, var(--green) 100%);
+      color: white;
+      padding: 20px 16px 18px;
+    }
+
+    .header-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+    }
+
+    .header-title {
+      font-size: 24px;
+      font-weight: 800;
+      letter-spacing: -0.5px;
+      line-height: 1.1;
+    }
+
+    .header-sub {
+      font-size: 13px;
+      opacity: 0.75;
+      margin-top: 3px;
+    }
+
+    .settings-btn {
+      background: rgba(255,255,255,0.18);
+      border: none;
+      color: white;
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      cursor: pointer;
+      font-size: 15px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .countdown {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: rgba(255,255,255,0.14);
+      border-radius: 12px;
+      padding: 10px 14px;
+      margin-top: 14px;
+    }
+
+    .countdown-num {
+      font-size: 32px;
+      font-weight: 900;
+      line-height: 1;
+    }
+
+    .countdown-label {
+      font-size: 14px;
+      font-weight: 700;
+      line-height: 1.3;
+    }
+
+    .countdown-date {
+      font-size: 12px;
+      opacity: 0.75;
+    }
+
+    /* ─── Tabs ─── */
+    .tabs {
+      background: white;
+      display: flex;
+      border-bottom: 1px solid var(--border);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    }
+
+    .tab-btn {
+      flex: 1;
+      padding: 12px 4px 10px;
+      text-align: center;
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--muted);
+      border: none;
+      background: none;
+      cursor: pointer;
+      border-bottom: 2px solid transparent;
+      transition: color 0.15s;
+      -webkit-tap-highlight-color: transparent;
+      position: relative;
+    }
+
+    .tab-btn.active {
+      color: var(--green);
+      border-bottom-color: var(--green);
+    }
+
+    .tab-sub {
+      display: block;
+      font-size: 10px;
+      font-weight: 500;
+      opacity: 0.65;
+      margin-top: 1px;
+    }
+
+    .tab-badge {
+      position: absolute;
+      top: 6px;
+      right: 8px;
+      background: var(--amber);
+      color: white;
+      font-size: 9px;
+      font-weight: 800;
+      min-width: 16px;
+      height: 16px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0 3px;
+    }
+
+    .tab-badge.hidden { display: none; }
+
+    /* ─── Panels ─── */
+    .panel { display: none; padding-bottom: 40px; }
+    .panel.active { display: block; }
+
+    /* ─── Day Banner ─── */
+    .day-banner {
+      background: white;
+      padding: 12px 16px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .day-chip {
+      background: var(--green-light);
+      color: var(--green);
+      font-size: 11px;
+      font-weight: 800;
+      padding: 4px 10px;
+      border-radius: 100px;
+    }
+
+    .day-note {
+      font-size: 13px;
+      color: var(--muted);
+    }
+
+    /* ─── Slot Header ─── */
+    .slot-header {
+      padding: 18px 16px 6px;
+      font-size: 11px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 1.2px;
+      color: #aaa;
+    }
+
+    /* ─── Cards ─── */
+    .card {
+      margin: 0 12px 8px;
+      background: var(--card);
+      border-radius: 14px;
+      padding: 13px 13px 13px 14px;
+      display: flex;
+      align-items: flex-start;
+      gap: 11px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+      cursor: pointer;
+      border: 2px solid transparent;
+      transition: border-color 0.15s, background 0.15s, box-shadow 0.15s;
+      -webkit-tap-highlight-color: transparent;
+      user-select: none;
+    }
+
+    .card:active { opacity: 0.85; }
+
+    .card.selected {
+      border-color: var(--green);
+      background: #f0f8f4;
+      box-shadow: 0 2px 10px rgba(45,99,72,0.12);
+    }
+
+    .card-icon { font-size: 26px; line-height: 1; flex-shrink: 0; margin-top: 1px; }
+
+    .card-body { flex: 1; min-width: 0; }
+
+    .card-name { font-size: 15px; font-weight: 700; line-height: 1.2; }
+
+    .card-desc { font-size: 13px; color: #777; margin-top: 3px; line-height: 1.4; }
+
+    .card-tag {
+      display: inline-block;
+      font-size: 10px;
+      font-weight: 800;
+      letter-spacing: 0.3px;
+      color: var(--green);
+      background: var(--green-light);
+      padding: 2px 8px;
+      border-radius: 100px;
+      margin-top: 6px;
+    }
+
+    .card-tag.hot {
+      color: var(--amber);
+      background: var(--amber-light);
+    }
+
+    .card-check {
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      border: 2px solid #ddd;
+      flex-shrink: 0;
+      margin-top: 3px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.15s;
+    }
+
+    .card.selected .card-check {
+      background: var(--green);
+      border-color: var(--green);
+    }
+
+    .check-icon {
+      display: none;
+      width: 10px;
+      height: 8px;
+    }
+
+    .card.selected .check-icon { display: block; }
+
+    /* ─── Plan Tab ─── */
+    .plan-intro {
+      padding: 18px 16px 4px;
+    }
+
+    .plan-title { font-size: 22px; font-weight: 800; }
+    .plan-sub { font-size: 13px; color: var(--muted); margin-top: 4px; }
+
+    .plan-day {
+      margin: 12px 12px 0;
+      background: var(--card);
+      border-radius: 14px;
+      overflow: hidden;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    }
+
+    .plan-day-header {
+      background: var(--green);
+      color: white;
+      padding: 9px 14px;
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    .plan-item {
+      padding: 10px 14px;
+      font-size: 14px;
+      border-bottom: 1px solid var(--bg);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .plan-item:last-child { border-bottom: none; }
+
+    .plan-item-info { flex: 1; }
+    .plan-item-name { font-weight: 600; font-size: 14px; }
+    .plan-item-slot { font-size: 11px; color: #bbb; text-transform: uppercase; letter-spacing: 0.5px; margin-top: 1px; }
+
+    .plan-empty {
+      padding: 14px;
+      font-size: 13px;
+      color: #ccc;
+      font-style: italic;
+    }
+
+    /* ─── Notes & Submit ─── */
+    .notes-section { padding: 16px 12px 0; }
+
+    .section-label {
+      font-size: 11px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 1.2px;
+      color: #aaa;
+      margin-bottom: 8px;
+    }
+
+    textarea {
+      width: 100%;
+      background: var(--card);
+      border: 2px solid var(--border);
+      border-radius: 14px;
+      padding: 12px 14px;
+      font-size: 14px;
+      font-family: inherit;
+      color: var(--text);
+      resize: none;
+      line-height: 1.5;
+    }
+
+    textarea:focus { outline: none; border-color: var(--green); }
+    textarea::placeholder { color: #ccc; }
+
+    .submit-section { padding: 14px 12px 0; }
+
+    .send-btn {
+      width: 100%;
+      background: linear-gradient(135deg, var(--green-dark), var(--green));
+      color: white;
+      border: none;
+      border-radius: 14px;
+      padding: 17px;
+      font-size: 16px;
+      font-weight: 800;
+      cursor: pointer;
+      -webkit-tap-highlight-color: transparent;
+      transition: opacity 0.15s;
+      letter-spacing: 0.2px;
+    }
+
+    .send-btn:active { opacity: 0.85; }
+    .send-btn:disabled { background: #ccc; cursor: not-allowed; }
+
+    .count-text {
+      text-align: center;
+      font-size: 13px;
+      color: var(--muted);
+      margin-top: 10px;
+      padding-bottom: 8px;
+    }
+
+    /* ─── Modal ─── */
+    .overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.45);
+      z-index: 500;
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+      backdrop-filter: blur(3px);
+      -webkit-backdrop-filter: blur(3px);
+    }
+
+    .overlay.hidden { display: none; }
+
+    .modal {
+      background: white;
+      border-radius: 22px 22px 0 0;
+      padding: 24px 20px 44px;
+      width: 100%;
+      max-width: 500px;
+      animation: slideUp 0.28s cubic-bezier(0.34, 1.4, 0.64, 1);
+    }
+
+    @keyframes slideUp {
+      from { transform: translateY(100%); }
+      to { transform: translateY(0); }
+    }
+
+    .modal-handle {
+      width: 36px;
+      height: 4px;
+      background: #e0e0e0;
+      border-radius: 2px;
+      margin: 0 auto 20px;
+    }
+
+    .modal-title { font-size: 20px; font-weight: 800; margin-bottom: 8px; }
+    .modal-desc { font-size: 14px; color: #666; line-height: 1.55; margin-bottom: 20px; }
+
+    .modal input[type="url"] {
+      width: 100%;
+      border: 2px solid var(--border);
+      border-radius: 12px;
+      padding: 13px 14px;
+      font-size: 14px;
+      font-family: inherit;
+      color: var(--text);
+      margin-bottom: 12px;
+    }
+
+    .modal input:focus { outline: none; border-color: var(--green); }
+
+    .modal-btn {
+      width: 100%;
+      background: var(--green);
+      color: white;
+      border: none;
+      border-radius: 12px;
+      padding: 15px;
+      font-size: 15px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .modal-skip {
+      width: 100%;
+      background: none;
+      border: none;
+      color: var(--muted);
+      font-size: 14px;
+      padding: 14px;
+      cursor: pointer;
+      font-family: inherit;
+    }
+
+    /* ─── Toast ─── */
+    .toast {
+      position: fixed;
+      bottom: 28px;
+      left: 50%;
+      transform: translateX(-50%) translateY(80px);
+      background: var(--green-dark);
+      color: white;
+      padding: 11px 20px;
+      border-radius: 100px;
+      font-size: 14px;
+      font-weight: 600;
+      z-index: 9999;
+      transition: transform 0.3s cubic-bezier(0.34, 1.4, 0.64, 1);
+      white-space: nowrap;
+      pointer-events: none;
+    }
+
+    .toast.show { transform: translateX(-50%) translateY(0); }
+  </style>
+</head>
+<body>
+
+<!-- ─── Header ─── -->
+<div class="header">
+  <div class="header-row">
+    <div>
+      <div class="header-title">🌿 Daylesford</div>
+      <div class="header-sub">Victoria's Spa Country</div>
+    </div>
+    <button class="settings-btn" onclick="openSettings()">⚙️</button>
+  </div>
+  <div class="countdown">
+    <div class="countdown-num" id="countdown-num">—</div>
+    <div>
+      <div class="countdown-label">days to go</div>
+      <div class="countdown-date">Sat 29 Aug – Mon 31 Aug 2026</div>
+    </div>
+  </div>
+</div>
+
+<!-- ─── Tabs ─── -->
+<div class="tabs">
+  <button class="tab-btn active" onclick="switchTab(0)">
+    Sat 29
+    <span class="tab-sub">Arrive PM</span>
+  </button>
+  <button class="tab-btn" onclick="switchTab(1)">
+    Sun 30
+    <span class="tab-sub">Full Day</span>
+  </button>
+  <button class="tab-btn" onclick="switchTab(2)">
+    Mon 31
+    <span class="tab-sub">Leave PM</span>
+  </button>
+  <button class="tab-btn" onclick="switchTab(3)">
+    My Plan
+    <span class="tab-sub" id="plan-tab-sub">0 picked</span>
+    <span class="tab-badge hidden" id="plan-badge">0</span>
+  </button>
+</div>
+
+<!-- ─── Day Panels ─── -->
+<div class="panel active" id="panel-0"></div>
+<div class="panel" id="panel-1"></div>
+<div class="panel" id="panel-2"></div>
+
+<!-- ─── Plan Panel ─── -->
+<div class="panel" id="panel-3">
+  <div class="plan-intro">
+    <div class="plan-title">Your Weekend Plan</div>
+    <div class="plan-sub">Review your picks then send to Discord</div>
+  </div>
+  <div id="plan-content"></div>
+  <div class="notes-section">
+    <div class="section-label" style="margin-top:16px">Trip Notes</div>
+    <textarea id="trip-notes" rows="4" placeholder="Anything to remember, questions, ideas..."></textarea>
+  </div>
+  <div class="submit-section">
+    <button class="send-btn" onclick="sendPlan()" id="send-btn">Send Plan to Discord 🚀</button>
+    <div class="count-text" id="count-text">0 activities selected</div>
+  </div>
+</div>
+
+<!-- ─── Setup Modal ─── -->
+<div class="overlay" id="setup-modal">
+  <div class="modal">
+    <div class="modal-handle"></div>
+    <div class="modal-title">👋 One quick thing</div>
+    <div class="modal-desc">
+      Paste your Discord webhook URL below and your plan will be sent there. The URL is saved only on this device — never sent anywhere else.
+    </div>
+    <input type="url" id="webhook-input" placeholder="https://discord.com/api/webhooks/..." />
+    <button class="modal-btn" onclick="saveWebhook()">Save & Start Planning</button>
+    <button class="modal-skip" onclick="closeSetup()">Skip for now</button>
+  </div>
+</div>
+
+<!-- ─── Toast ─── -->
+<div class="toast" id="toast"></div>
+
+<script>
+// ─── DATA ───────────────────────────────────────────────────
+const DAYS = [
+  {
+    label: 'Saturday 29 August',
+    note: 'Arriving afternoon',
+    slots: [
+      {
+        time: '☀️  Afternoon',
+        id: 'afternoon',
+        items: [
+          { id: 'vincent-st', emoji: '🛍️', name: 'Vincent Street', desc: 'Browse boutiques, galleries & specialty shops along Daylesford\'s charming main street', tag: 'Explore' },
+          { id: 'lake-walk-sat', emoji: '🚶', name: 'Lake Daylesford Walk', desc: 'Easy, peaceful lakeside loop — perfect first impression of the town', tag: 'Nature' },
+          { id: 'convent-sat', emoji: '🎨', name: 'The Convent Gallery', desc: 'Seven art galleries, chapel & museum in a stunning former convent building', tag: 'Culture' },
+          { id: 'mill-markets-sat', emoji: '🏺', name: 'The Mill Markets', desc: 'One of Australia\'s biggest antique & vintage markets — great for a browse', tag: 'Shopping' },
+          { id: 'wombat-hill-sat', emoji: '🌳', name: 'Wombat Hill Botanic Gardens', desc: 'Historic gardens with sweeping panoramic views over the countryside', tag: 'Nature' },
+        ]
+      },
+      {
+        time: '🌙  Evening',
+        id: 'evening',
+        items: [
+          { id: 'lake-house-sat', emoji: '🍽️', name: 'Lake House Restaurant', desc: 'Iconic fine dining on the lake edge — Daylesford\'s most celebrated restaurant. Book ahead!', tag: '⭐ Top Pick', hot: true },
+          { id: 'boathouse-sat', emoji: '⛵', name: 'Boathouse Restaurant', desc: 'Lakeside dining with a relaxed atmosphere and beautiful water views', tag: 'Dining' },
+          { id: 'cliffys-sat', emoji: '🥗', name: 'Cliffy\'s Emporium', desc: 'Beloved local favourite with fresh, seasonal dishes in a cosy setting', tag: 'Casual' },
+          { id: 'daylesford-hotel-sat', emoji: '🏠', name: 'Daylesford Hotel', desc: 'Classic country pub with good food and a warm, welcoming atmosphere', tag: 'Pub' },
+          { id: 'hepburn-bath-sat', emoji: '♨️', name: 'Hepburn Bathhouse — Evening Soak', desc: 'Unwind in the mineral pools after the drive — the perfect way to arrive in spa country', tag: 'Spa' },
+        ]
+      }
+    ]
+  },
+  {
+    label: 'Sunday 30 August',
+    note: 'Full day to explore',
+    slots: [
+      {
+        time: '☀️  Morning',
+        id: 'morning',
+        items: [
+          { id: 'sunday-market', emoji: '🛒', name: 'Daylesford Sunday Market', desc: 'Fresh produce, artisan goods & local crafts every Sunday morning — don\'t miss it!', tag: '⭐ Top Pick', hot: true },
+          { id: 'harry-me', emoji: '☕', name: 'Coffee at Harry & Me', desc: 'Much-loved Hepburn Springs cafe — excellent coffee and breakfast', tag: 'Cafe' },
+          { id: 'frank-connie-morn', emoji: '🥐', name: 'Frank & Connie\'s', desc: 'Hepburn Springs neighbourhood favourite for breakfast & morning coffee', tag: 'Cafe' },
+          { id: 'mineral-springs', emoji: '💧', name: 'Mineral Springs Walk', desc: 'Taste the different natural mineral springs dotted around the region — quirky & fun', tag: 'Unique' },
+          { id: 'hepburn-walk', emoji: '🥾', name: 'Hepburn Springs Trail', desc: '30–40 min bush walk connecting Daylesford & Hepburn Springs through beautiful parkland', tag: 'Walk' },
+          { id: 'wombat-hill-sun', emoji: '🌳', name: 'Wombat Hill Botanic Gardens', desc: 'Peaceful morning stroll through historic gardens', tag: 'Nature' },
+        ]
+      },
+      {
+        time: '🍴  Lunch',
+        id: 'lunch',
+        items: [
+          { id: 'chocolate-mill', emoji: '🍫', name: 'The Chocolate Mill', desc: 'Watch chocolatiers at work, hot chocolate, cake & handmade sweets', tag: 'Cafe' },
+          { id: 'farmers-arms', emoji: '🍺', name: 'Farmers Arms Hotel', desc: '165-year-old pub with a produce-driven menu & impressive regional wine list', tag: 'Pub Lunch' },
+          { id: 'surly-goat-lunch', emoji: '🐐', name: 'The Surly Goat', desc: 'Craft beer, great food & relaxed vibes in Hepburn Springs', tag: 'Casual' },
+          { id: 'cliffys-sun', emoji: '🥗', name: 'Cliffy\'s Emporium', desc: 'Fresh seasonal dishes in a cosy Daylesford favourite', tag: 'Casual' },
+        ]
+      },
+      {
+        time: '☕  Afternoon',
+        id: 'afternoon',
+        items: [
+          { id: 'hepburn-spa-sun', emoji: '♨️', name: 'Hepburn Bathhouse & Spa', desc: 'Freshly renovated with private bathing rooms, mineral pools & spa treatments. Book ahead!', tag: '⭐ Top Pick', hot: true },
+          { id: 'lake-house-spa', emoji: '🧖', name: 'The Spa at Lake House', desc: 'Iconic luxury spa on the edge of Lake Daylesford, established 1984', tag: 'Spa' },
+          { id: 'passing-clouds', emoji: '🍷', name: 'Passing Clouds Winery', desc: 'Chardonnay & pinot on a gorgeous sun-drenched deck — one of the region\'s best', tag: 'Winery' },
+          { id: 'paramoor', emoji: '🍾', name: 'Paramoor Winery', desc: 'Minimal intervention wines — elegant pinot noir & riesling in a beautiful setting', tag: 'Winery' },
+          { id: 'daylesford-cider', emoji: '🍏', name: 'Daylesford Cider', desc: 'Handcrafted ciders in an English-style tavern cellar amid picturesque orchards', tag: 'Tasting' },
+          { id: 'peppermint-sun', emoji: '🌿', name: 'Peppermint Springs Retreat', desc: 'Peaceful day spa with treatments and mineral soaking pools', tag: 'Spa' },
+        ]
+      },
+      {
+        time: '🌙  Evening',
+        id: 'evening',
+        items: [
+          { id: 'sakana', emoji: '🍱', name: 'Sakana', desc: 'Japanese-inspired dining — a much-loved Daylesford favourite', tag: 'Dining' },
+          { id: 'kadota', emoji: '🌙', name: 'Kadota', desc: 'Modern Asian cuisine — elegant and consistently delicious', tag: 'Dining' },
+          { id: 'bistro-terroir', emoji: '🥩', name: 'Bistro Terroir', desc: 'French-inspired bistro celebrating local produce with a great wine list', tag: 'Dining' },
+          { id: 'lake-house-sun', emoji: '🍽️', name: 'Lake House Restaurant', desc: 'If you saved it for tonight — worth every cent. Book well ahead.', tag: '⭐ Top Pick', hot: true },
+          { id: 'boathouse-sun', emoji: '⛵', name: 'Boathouse Restaurant', desc: 'Relaxed lakeside dinner with a lovely evening atmosphere', tag: 'Dining' },
+        ]
+      }
+    ]
+  },
+  {
+    label: 'Monday 31 August',
+    note: 'Leaving afternoon',
+    slots: [
+      {
+        time: '🌅  Morning',
+        id: 'morning',
+        items: [
+          { id: 'lake-walk-mon', emoji: '🚶', name: 'Lake Daylesford Walk', desc: 'A peaceful lakeside walk to start the final morning', tag: 'Nature' },
+          { id: 'convent-mon', emoji: '🎨', name: 'The Convent Gallery', desc: 'Explore the seven gallery spaces, chapel & museum before heading home', tag: 'Culture' },
+          { id: 'mill-markets-mon', emoji: '🏺', name: 'Mill Markets', desc: 'Last chance for antique treasures before hitting the road', tag: 'Shopping' },
+          { id: 'hepburn-walk-mon', emoji: '🥾', name: 'Hepburn Springs Trail', desc: 'A final morning walk through the Hepburn Regional Park', tag: 'Walk' },
+          { id: 'peppermint-mon', emoji: '🌿', name: 'Peppermint Springs Spa', desc: 'One last treatment to carry the relaxation home with you', tag: 'Spa' },
+        ]
+      },
+      {
+        time: '🥞  Brunch (before heading off)',
+        id: 'brunch',
+        items: [
+          { id: 'frank-connie-mon', emoji: '🥐', name: 'Frank & Connie\'s', desc: 'The perfect farewell brunch spot in Hepburn Springs', tag: 'Cafe' },
+          { id: 'surly-goat-mon', emoji: '🐐', name: 'The Surly Goat', desc: 'Relaxed brunch with good coffee before the drive back to Melbourne', tag: 'Casual' },
+          { id: 'cliffys-mon', emoji: '🥗', name: 'Cliffy\'s Emporium', desc: 'Great brunch in central Daylesford to fuel the drive home', tag: 'Cafe' },
+          { id: 'chocolate-mill-mon', emoji: '🍫', name: 'The Chocolate Mill', desc: 'Sweet send-off — hot chocolate & pastries before the road', tag: 'Cafe' },
+          { id: 'boathouse-mon', emoji: '⛵', name: 'Boathouse Brunch', desc: 'A lovely lakeside farewell with beautiful views', tag: 'Dining' },
+        ]
+      }
+    ]
+  }
+];
+
+// ─── STATE ──────────────────────────────────────────────────
+const selected = new Set();
+
+// ─── INIT ───────────────────────────────────────────────────
+function init() {
+  DAYS.forEach((day, i) => renderPanel(day, i));
+  updateCountdown();
+  updatePlan();
+
+  const webhook = localStorage.getItem('discord_webhook');
+  if (!webhook) {
+    document.getElementById('setup-modal').classList.remove('hidden');
+  }
+}
+
+function renderPanel(day, i) {
+  const panel = document.getElementById(`panel-${i}`);
+  let html = `
+    <div class="day-banner">
+      <span class="day-chip">${day.label}</span>
+      <span class="day-note">${day.note}</span>
+    </div>
+  `;
+
+  day.slots.forEach(slot => {
+    html += `<div class="slot-header">${slot.time}</div>`;
+    slot.items.forEach(item => {
+      html += `
+        <div class="card" id="card-${item.id}" onclick="toggle('${item.id}')">
+          <div class="card-icon">${item.emoji}</div>
+          <div class="card-body">
+            <div class="card-name">${item.name}</div>
+            <div class="card-desc">${item.desc}</div>
+            <span class="card-tag${item.hot ? ' hot' : ''}">${item.tag}</span>
+          </div>
+          <div class="card-check">
+            <svg class="check-icon" viewBox="0 0 10 8" fill="none">
+              <path d="M1 4l3 3 5-6" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </div>
+        </div>
+      `;
+    });
+  });
+
+  panel.innerHTML = html;
+}
+
+// ─── INTERACTIONS ────────────────────────────────────────────
+function toggle(id) {
+  const card = document.getElementById(`card-${id}`);
+  if (selected.has(id)) {
+    selected.delete(id);
+    card.classList.remove('selected');
+  } else {
+    selected.add(id);
+    card.classList.add('selected');
+  }
+  updatePlan();
+}
+
+function switchTab(idx) {
+  document.querySelectorAll('.panel').forEach((p, i) => p.classList.toggle('active', i === idx));
+  document.querySelectorAll('.tab-btn').forEach((t, i) => t.classList.toggle('active', i === idx));
+  window.scrollTo(0, 0);
+  if (idx === 3) updatePlan();
+}
+
+function updateCountdown() {
+  const tripDate = new Date('2026-08-29T00:00:00+10:00');
+  const now = new Date();
+  const diff = Math.max(0, Math.floor((tripDate - now) / 86400000));
+  document.getElementById('countdown-num').textContent = diff;
+}
+
+function updatePlan() {
+  const total = selected.size;
+
+  // Tab badge
+  const badge = document.getElementById('plan-badge');
+  const sub = document.getElementById('plan-tab-sub');
+  sub.textContent = `${total} picked`;
+  badge.textContent = total;
+  badge.classList.toggle('hidden', total === 0);
+
+  // Count text
+  document.getElementById('count-text').textContent =
+    `${total} ${total === 1 ? 'activity' : 'activities'} selected`;
+
+  // Plan content
+  const container = document.getElementById('plan-content');
+  let html = '';
+
+  DAYS.forEach(day => {
+    const picks = [];
+    day.slots.forEach(slot => {
+      slot.items.filter(a => selected.has(a.id)).forEach(a => {
+        picks.push({ emoji: a.emoji, name: a.name, slotTime: slot.time });
+      });
+    });
+
+    html += `<div class="plan-day">
+      <div class="plan-day-header">${day.label}</div>`;
+
+    if (picks.length === 0) {
+      html += `<div class="plan-empty">Nothing selected yet</div>`;
+    } else {
+      picks.forEach(p => {
+        html += `
+          <div class="plan-item">
+            <span>${p.emoji}</span>
+            <div class="plan-item-info">
+              <div class="plan-item-name">${p.name}</div>
+              <div class="plan-item-slot">${p.slotTime.replace(/[^\w\s]/g, '').trim()}</div>
+            </div>
+          </div>
+        `;
+      });
+    }
+
+    html += '</div>';
+  });
+
+  container.innerHTML = html;
+}
+
+// ─── DISCORD ─────────────────────────────────────────────────
+async function sendPlan() {
+  const webhook = localStorage.getItem('discord_webhook');
+  if (!webhook) { openSettings(); return; }
+
+  const btn = document.getElementById('send-btn');
+  btn.disabled = true;
+  btn.textContent = 'Sending...';
+
+  const notes = document.getElementById('trip-notes').value.trim();
+
+  const fields = DAYS.map(day => {
+    const picks = [];
+    day.slots.forEach(slot => {
+      slot.items.filter(a => selected.has(a.id)).forEach(a => {
+        picks.push(`${a.emoji} **${a.name}**`);
+      });
+    });
+    return {
+      name: `📅 ${day.label}`,
+      value: picks.length > 0 ? picks.join('\n') : '_Nothing selected_',
+      inline: false
+    };
+  });
+
+  if (notes) {
+    fields.push({ name: '📝 Notes', value: notes, inline: false });
+  }
+
+  const payload = {
+    username: 'Daylesford Planner 🌿',
+    embeds: [{
+      title: '🌿 Daylesford Weekend Plan',
+      description: '**Aug 29–31 · Victoria\'s Spa Country**\n\nHere\'s what we\'re thinking for the trip!',
+      color: 0x2d6348,
+      fields,
+      footer: { text: 'Sent from the Daylesford Trip Planner' },
+      timestamp: new Date().toISOString()
+    }]
+  };
+
+  try {
+    const res = await fetch(webhook, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    });
+    if (res.ok || res.status === 204) {
+      showToast('✅ Plan sent to Discord!');
+    } else {
+      showToast('❌ Send failed — check the webhook URL');
+    }
+  } catch {
+    showToast('❌ Network error — try again');
+  } finally {
+    btn.disabled = false;
+    btn.textContent = 'Send Plan to Discord 🚀';
+  }
+}
+
+// ─── WEBHOOK SETUP ───────────────────────────────────────────
+function openSettings() {
+  const modal = document.getElementById('setup-modal');
+  const input = document.getElementById('webhook-input');
+  modal.classList.remove('hidden');
+  const saved = localStorage.getItem('discord_webhook');
+  if (saved) input.value = saved;
+}
+
+function closeSetup() {
+  document.getElementById('setup-modal').classList.add('hidden');
+}
+
+function saveWebhook() {
+  const url = document.getElementById('webhook-input').value.trim();
+  if (!url.includes('discord.com/api/webhooks/') && !url.includes('discordapp.com/api/webhooks/')) {
+    showToast('⚠️ Please enter a valid Discord webhook URL');
+    return;
+  }
+  localStorage.setItem('discord_webhook', url);
+  closeSetup();
+  showToast('✅ Webhook saved!');
+}
+
+// close modal on backdrop tap
+document.getElementById('setup-modal').addEventListener('click', function(e) {
+  if (e.target === this) closeSetup();
+});
+
+// ─── TOAST ───────────────────────────────────────────────────
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 3000);
+}
+
+// ─── START ───────────────────────────────────────────────────
+init();
+</script>
+</body>
+</html>
