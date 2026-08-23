@@ -301,6 +301,8 @@ const convent   = WM + '0/07/Daylesford_Convent_Gallery_006.JPG';
 const coffee    = WM + 'd/d8/Coffee_Time%2C_Daylesford%2C_Victoria_Australia_%284826478686%29.jpg';
 const locarno   = WM + 'b/be/Locarno_and_the_pavilion.jpg';   // Hepburn mineral springs pavillion
 const blowhole  = WM + '5/5c/Hepburn_springs_blowhole.jpg';   // Hepburn Springs nature/trail
+const trentham  = WM + '7/75/Trentham_Falls%2C_Daylesford%2C_Victoria_%2851095475732%29.jpg';
+const sailors   = WM + '4/41/Sailors_Falls_Victoria.jpg';
 
 // Official venue websites
 const bathhouse  = 'https://hepburnbathhouse.com/wp-content/uploads/sites/11/2025/12/HepburnBS-PAV-8368-1024x683.jpg';
@@ -335,10 +337,11 @@ const DAYS = [
         time: '☀️  Afternoon', id: 'afternoon',
         items: [
           { id: 'vincent-st',      emoji: '🛍️', name: 'Vincent Street',               desc: 'Browse boutiques, galleries & specialty shops along Daylesford\'s charming main street',          tag: 'Explore',    img: mainst,      maps: 'https://maps.google.com/?q=Vincent+Street+Daylesford+VIC' },
-          { id: 'lake-walk-sat',   emoji: '🚶', name: 'Lake Daylesford Walk',           desc: 'Easy, peaceful lakeside loop — perfect first impression of the town',                              tag: 'Nature',     img: lake,        maps: 'https://maps.google.com/?q=Lake+Daylesford+Victoria' },
+          { id: 'lake-walk-sat',   emoji: '🚶', name: 'Lake Daylesford Walk',           desc: 'Flat, easy 4.7km loop around the lake (~1hr) — passes Wombat Flat & Central mineral springs',        tag: 'Nature',     img: lake,        maps: 'https://maps.google.com/?q=Lake+Daylesford+Victoria' },
           { id: 'convent-sat',     emoji: '🎨', name: 'The Convent Gallery',            desc: 'Seven art galleries, chapel & museum in a stunning former convent building',                        tag: 'Culture',    img: convent,     maps: 'https://maps.google.com/?q=The+Convent+Gallery+Daylesford+Victoria' },
           { id: 'mill-markets-sat',emoji: '🏺', name: 'The Mill Markets',              desc: 'One of Australia\'s biggest antique & vintage markets — great for a browse',                        tag: 'Shopping',   img: millMkts,    maps: 'https://maps.google.com/?q=The+Mill+Markets+Daylesford+Victoria' },
           { id: 'wombat-hill-sat', emoji: '🌳', name: 'Wombat Hill Botanic Gardens',   desc: 'Historic gardens with sweeping panoramic views over the countryside',                               tag: 'Nature',     img: wombat,      maps: 'https://maps.google.com/?q=Wombat+Hill+Botanic+Gardens+Daylesford+Victoria' },
+          { id: 'jubilee-lake-sat', emoji: '🦚', name: 'Jubilee Lake Loop',            desc: 'Easy, flat 40-min circuit around a gold-rush-era reservoir — resident peacocks & a photogenic wooden bridge', tag: 'Nature', img: lake, maps: 'https://maps.google.com/?q=Jubilee+Lake+Daylesford+Victoria' },
         ]
       },
       {
@@ -364,7 +367,9 @@ const DAYS = [
           { id: 'harry-me',        emoji: '☕', name: 'Harry\'s Hepburn',              desc: 'Much-loved Hepburn Springs cafe — excellent coffee and breakfast',                                 tag: 'Cafe',       img: harrys,      maps: 'https://maps.google.com/?q=Harry%27s+Hepburn+Hepburn+Springs+Victoria' },
           { id: 'frank-connie-morn', emoji: '🥐', name: 'Frank & Connie\'s Kitchen',  desc: 'Hepburn Springs neighbourhood favourite — fresh seasonal dishes drawing on French, Greek & Middle Eastern cuisines', tag: 'Cafe', img: frankConnie, maps: 'https://maps.google.com/?q=Frank+and+Connies+Kitchen+Hepburn+Springs+Victoria' },
           { id: 'mineral-springs', emoji: '💧', name: 'Mineral Springs Walk',         desc: 'Taste the different natural mineral springs at the historic Locarno Pavilion reserve — quirky & fun', tag: 'Unique',  img: locarno,     maps: 'https://maps.google.com/?q=Hepburn+Mineral+Springs+Reserve+Victoria' },
-          { id: 'hepburn-walk',    emoji: '🥾', name: 'Hepburn Springs Trail',        desc: '30–40 min bush walk connecting Daylesford & Hepburn Springs through beautiful parkland',            tag: 'Walk',       img: blowhole,    maps: 'https://maps.google.com/?q=Hepburn+Regional+Park+Victoria' },
+          { id: 'tipperary-track', emoji: '🥾', name: 'Tipperary Track',              desc: 'Well-signed 5km forest trail through the Great Dividing Range, connecting Daylesford & Hepburn Springs (~1.5hrs)', tag: 'Walk', img: blowhole, maps: 'https://maps.google.com/?q=Tipperary+Track+Daylesford+Victoria' },
+          { id: 'sailors-falls-sun', emoji: '💦', name: 'Sailors Falls',              desc: '20m waterfall that becomes a double falls after rain — short walk from the car park, or push on 6.5km through forest to Lake Daylesford', tag: 'Waterfall', img: sailors, maps: 'https://maps.google.com/?q=Sailors+Falls+Daylesford+Victoria' },
+          { id: 'dry-diggings-sun', emoji: '⛏️', name: 'Dry Diggings Track',          desc: 'Gold-rush era trail past old water races & mining relics through box-ironbark forest',              tag: 'Walk',       img: blowhole,    maps: 'https://maps.google.com/?q=Dry+Diggings+Track+Hepburn+Regional+Park+Victoria' },
           { id: 'wombat-hill-sun', emoji: '🌳', name: 'Wombat Hill Botanic Gardens',  desc: 'Peaceful morning stroll through historic gardens',                                                  tag: 'Nature',     img: wombat,      maps: 'https://maps.google.com/?q=Wombat+Hill+Botanic+Gardens+Daylesford+Victoria' },
         ]
       },
@@ -386,6 +391,7 @@ const DAYS = [
           { id: 'paramoor',        emoji: '🍾', name: 'Paramoor Winery',               desc: 'Minimal intervention wines — elegant pinot noir & riesling in a beautiful setting',                tag: 'Winery',     img: paramoor,    maps: 'https://maps.google.com/?q=Paramoor+Winery+Daylesford+Victoria' },
           { id: 'daylesford-cider',emoji: '🍏', name: 'Daylesford Cider',              desc: 'Handcrafted ciders in an English-style tavern cellar amid picturesque orchards',                   tag: 'Tasting',    img: dlCider,     maps: 'https://maps.google.com/?q=Daylesford+Cider+Company+Musk+Victoria' },
           { id: 'peppermint-sun',  emoji: '🌿', name: 'Peppermint Springs Retreat',    desc: 'Peaceful day spa with treatments and mineral soaking pools',                                        tag: 'Spa',        img: peppermint,  maps: 'https://maps.google.com/?q=Peppermint+Springs+Retreat+Daylesford+Victoria' },
+          { id: 'trentham-falls',  emoji: '🌊', name: 'Trentham Falls',                desc: 'Victoria\'s tallest single-drop waterfall — 32m plunge over a basalt cliff, easy platform viewing. ~20min drive', tag: 'Day Trip', img: trentham, maps: 'https://maps.google.com/?q=Trentham+Falls+Victoria' },
         ]
       },
       {
@@ -407,10 +413,10 @@ const DAYS = [
       {
         time: '🌅  Morning', id: 'morning',
         items: [
-          { id: 'lake-walk-mon',   emoji: '🚶', name: 'Lake Daylesford Walk',           desc: 'A peaceful lakeside walk to start the final morning',                                              tag: 'Nature',     img: lake,        maps: 'https://maps.google.com/?q=Lake+Daylesford+Victoria' },
+          { id: 'lake-walk-mon',   emoji: '🚶', name: 'Lake Daylesford Walk',           desc: 'A peaceful 4.7km lakeside loop (~1hr) to start the final morning',                                 tag: 'Nature',     img: lake,        maps: 'https://maps.google.com/?q=Lake+Daylesford+Victoria' },
           { id: 'convent-mon',     emoji: '🎨', name: 'The Convent Gallery',            desc: 'Explore the seven gallery spaces, chapel & museum before heading home',                            tag: 'Culture',    img: convent,     maps: 'https://maps.google.com/?q=The+Convent+Gallery+Daylesford+Victoria' },
           { id: 'mill-markets-mon',emoji: '🏺', name: 'Mill Markets',                  desc: 'Last chance for antique treasures before hitting the road',                                         tag: 'Shopping',   img: millMkts,    maps: 'https://maps.google.com/?q=The+Mill+Markets+Daylesford+Victoria' },
-          { id: 'hepburn-walk-mon',emoji: '🥾', name: 'Hepburn Springs Trail',         desc: 'A final morning walk through the Hepburn Regional Park',                                           tag: 'Walk',       img: blowhole,    maps: 'https://maps.google.com/?q=Hepburn+Regional+Park+Victoria' },
+          { id: 'argyle-walk-mon', emoji: '🥾', name: 'Argyle Walk',                   desc: 'Family-friendly out-and-back along Wild Cat Creek through eucalypt forest, passing a disused gold mine shaft', tag: 'Walk', img: blowhole, maps: 'https://maps.google.com/?q=Argyle+Walk+Hepburn+Regional+Park+Victoria' },
           { id: 'peppermint-mon',  emoji: '🌿', name: 'Peppermint Springs Spa',         desc: 'One last treatment to carry the relaxation home with you',                                         tag: 'Spa',        img: peppermint,  maps: 'https://maps.google.com/?q=Peppermint+Springs+Retreat+Daylesford+Victoria' },
         ]
       },
