@@ -270,6 +270,35 @@
     .timeline-block-time { font-size: 10px; font-weight: 800; color: var(--green); }
     .timeline-block-name { font-size: 12px; font-weight: 700; color: var(--text); margin-top: 1px; }
 
+    /* ─── Map ─── */
+    .map-day-select { display: flex; gap: 6px; margin: 0 12px 10px; }
+    .map-day-btn {
+      flex: 1; border: 1.5px solid var(--border); background: white; color: var(--muted);
+      font-size: 12px; font-weight: 700; padding: 8px 4px; border-radius: 10px; cursor: pointer;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .map-day-btn.active { background: var(--green); border-color: var(--green); color: white; }
+    .map-container {
+      margin: 0 12px; border-radius: 14px; overflow: hidden;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.05); border: 1px solid var(--border);
+    }
+    #leaflet-map { height: 380px; width: 100%; background: var(--bg); }
+    .map-legend {
+      margin: 10px 12px 0; font-size: 12px; color: var(--muted);
+      display: flex; align-items: center; gap: 6px;
+    }
+    .map-pin {
+      display: flex; align-items: center; justify-content: center;
+      width: 26px; height: 26px; border-radius: 50% 50% 50% 0;
+      transform: rotate(-45deg); background: var(--green); border: 2px solid white;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.35);
+    }
+    .map-pin span { transform: rotate(45deg); font-size: 12px; font-weight: 800; color: white; }
+    .map-pin.home { background: var(--amber); }
+    .leaflet-popup-content { font-family: inherit; font-size: 13px; }
+    .map-popup-time { font-size: 11px; font-weight: 800; color: var(--green); }
+    .map-popup-name { font-weight: 700; margin-top: 1px; }
+
     /* ─── Notes & Submit ─── */
     .notes-section { padding: 16px 12px 0; }
     .section-label {
@@ -310,6 +339,7 @@
     }
     .toast.show { transform: translateX(-50%) translateY(0); }
   </style>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
 </head>
 <body>
 
@@ -362,6 +392,7 @@
     <div class="view-toggle">
       <button class="view-toggle-btn active" id="view-toggle-list" onclick="setViewMode('list')">📋 List</button>
       <button class="view-toggle-btn" id="view-toggle-timeline" onclick="setViewMode('timeline')">🕐 Timeline</button>
+      <button class="view-toggle-btn" id="view-toggle-map" onclick="setViewMode('map')">🗺️ Map</button>
     </div>
   </div>
   <div id="plan-content"></div>
@@ -379,6 +410,7 @@
 <div class="toast" id="toast"></div>
 
 <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.2/Sortable.min.js"></script>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script>
 // ─── CONFIG ─────────────────────────────────────────────────
 const DISCORD_WEBHOOK = 'YOUR_WEBHOOK_URL_HERE';
@@ -592,6 +624,38 @@ function computeSchedule(dayIdx) {
   });
 }
 
+// ─── MAP COORDINATES ────────────────────────────────────────
+// Real-world anchor point per area (approximate town/landmark centre).
+// Individual activities in the same area get a small deterministic
+// jitter added so their pins don't stack exactly on top of each other —
+// this is a rough day-route map, not a precision geocoder.
+const AREA_COORDS = {
+  daylesford:   [-37.3439, 144.1423],
+  hepburn:      [-37.3167, 144.1333],
+  jubilee:      [-37.3600, 144.1430],
+  sailorsfalls: [-37.3903, 144.1200],
+  musk:         [-37.3667, 144.2000],
+  mtfranklin:   [-37.2651, 144.1504],
+  trentham:     [-37.3833, 144.3167],
+  wheatsheaf:   [-37.3140, 144.2260],
+};
+const HOME_COORDS = AREA_COORDS.wheatsheaf;
+
+function hashString(str) {
+  let h = 0;
+  for (let i = 0; i < str.length; i++) h = (h * 31 + str.charCodeAt(i)) | 0;
+  return Math.abs(h);
+}
+
+function getItemCoords(p) {
+  const base = AREA_COORDS[p.area] || AREA_COORDS.daylesford;
+  const h = hashString(p.uid);
+  // +/- ~0.003deg (~250-300m) jitter, deterministic per item so it's stable across renders
+  const jitterLat = ((h % 100) / 100 - 0.5) * 0.006;
+  const jitterLng = (((h >> 8) % 100) / 100 - 0.5) * 0.006;
+  return [base[0] + jitterLat, base[1] + jitterLng];
+}
+
 // ─── DEFAULT PLAN ───────────────────────────────────────────
 // A curated full weekend so there's something to edit from rather than a blank slate.
 const DEFAULT_PLAN_IDS = [
@@ -608,9 +672,11 @@ const selected = new Set();
 let plan = [];
 let customCounter = 0;
 let sortables = [];
-let viewMode = 'list'; // 'list' | 'timeline'
+let viewMode = 'list'; // 'list' | 'timeline' | 'map'
 // Sat starts at check-in (4pm). Sun is the sleep-in day. Mon is capped by 10am checkout.
 let dayStart = ['13:30', '10:30', '08:00']; // editable per-day start time, "HH:MM"
+let mapDay = 0; // which day's route the Map view is showing
+let leafletMap = null;
 
 // ─── INIT ───────────────────────────────────────────────────
 function init() {
@@ -785,6 +851,73 @@ function setViewMode(mode) {
   updatePlan();
 }
 
+function setMapDay(dayIdx) {
+  mapDay = dayIdx;
+  updatePlan();
+}
+
+function pinIcon(html, extraClass) {
+  return L.divIcon({
+    className: '',
+    html: `<div class="map-pin${extraClass ? ' ' + extraClass : ''}"><span>${html}</span></div>`,
+    iconSize: [26, 34], iconAnchor: [13, 30], popupAnchor: [0, -28]
+  });
+}
+
+// Must run AFTER the #leaflet-map div is actually in the DOM (called from updatePlan).
+function renderMapView(dayIdx) {
+  if (leafletMap) { leafletMap.remove(); leafletMap = null; }
+  const container = document.getElementById('leaflet-map');
+  if (!container || typeof L === 'undefined') return;
+
+  const schedule = computeSchedule(dayIdx);
+  const map = L.map(container, { scrollWheelZoom: false });
+  leafletMap = map;
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+    maxZoom: 18
+  }).addTo(map);
+
+  const bounds = [];
+
+  L.marker(HOME_COORDS, { icon: pinIcon('🏠', 'home') })
+    .addTo(map)
+    .bindPopup(`<div class="map-popup-name">🏠 Lily's Farm Studio</div><div>Our Airbnb — Wheatsheaf</div>`);
+  bounds.push(HOME_COORDS);
+
+  const routePoints = [];
+  schedule.forEach((p, i) => {
+    const coords = getItemCoords(p);
+    routePoints.push(coords);
+    bounds.push(coords);
+    L.marker(coords, { icon: pinIcon(String(i + 1)) })
+      .addTo(map)
+      .bindPopup(`<div class="map-popup-time">${formatClock(p.start)} – ${formatClock(p.end)}</div><div class="map-popup-name">${p.emoji} ${escapeHtml(p.name)}</div>`);
+  });
+
+  if (routePoints.length > 1) {
+    L.polyline(routePoints, { color: '#2d6348', weight: 3, opacity: 0.7, dashArray: '6 6' }).addTo(map);
+  }
+
+  // The container's size right after innerHTML insertion isn't always settled yet
+  // (Leaflet under-reads the width), which throws off fitBounds — invalidateSize()
+  // on the next frame forces a re-measure before we fit.
+  requestAnimationFrame(() => {
+    map.invalidateSize();
+    if (bounds.length > 1) {
+      map.fitBounds(bounds, { padding: [30, 30] });
+    } else {
+      map.setView(HOME_COORDS, 12);
+    }
+  });
+
+  if (bounds.length > 1) {
+    map.fitBounds(bounds, { padding: [30, 30] });
+  } else {
+    map.setView(HOME_COORDS, 12);
+  }
+}
+
 const PX_PER_MIN = 1.15;
 
 function renderTimelineDay(dayIdx, schedule) {
@@ -850,9 +983,23 @@ function updatePlan() {
 
   document.getElementById('view-toggle-list').classList.toggle('active', viewMode === 'list');
   document.getElementById('view-toggle-timeline').classList.toggle('active', viewMode === 'timeline');
+  document.getElementById('view-toggle-map').classList.toggle('active', viewMode === 'map');
 
   const container = document.getElementById('plan-content');
   let html = '';
+
+  if (viewMode === 'map') {
+    html += `<div class="map-day-select">`;
+    DAYS.forEach((day, i) => {
+      html += `<button class="map-day-btn${mapDay === i ? ' active' : ''}" onclick="setMapDay(${i})">${day.label.split(' ')[0]} ${day.label.split(' ')[1]}</button>`;
+    });
+    html += `</div>
+      <div class="map-container"><div id="leaflet-map"></div></div>
+      <div class="map-legend">🏠 = Lily's Farm Studio (our Airbnb) · numbered pins = visit order, dashed line = route</div>`;
+    container.innerHTML = html;
+    renderMapView(mapDay);
+    return;
+  }
 
   DAYS.forEach((day, dayIdx) => {
     const schedule = computeSchedule(dayIdx);
