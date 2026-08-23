@@ -429,6 +429,7 @@ const DAYS = [
       {
         time: '☀️  Afternoon', id: 'afternoon',
         items: [
+          { id: 'cliffys-lunch-sat', emoji: '🥗', name: 'Lunch at Cliffy\'s Emporium',   desc: 'Fresh, seasonal dishes in a cosy setting — a relaxed first stop before check-in opens at 4pm', tag: 'Lunch',      duration: 75, area: 'daylesford', img: cliffys,     maps: 'https://maps.google.com/?q=Cliffy%27s+Emporium+Daylesford+Victoria' },
           { id: 'checkin-sat',     emoji: '🔑', name: 'Check-in — Lily\'s Farm Studio', desc: 'Check-in is from 4:00pm. Settle into the studio on the edge of Wombat State Forest, unpack, maybe spot a kangaroo before heading out for the evening', tag: 'Check-in', duration: 180, area: 'wheatsheaf', img: wombat, maps: 'https://www.airbnb.com.au/rooms/33254784' },
           { id: 'vincent-st',      emoji: '🛍️', name: 'Vincent Street',               desc: 'Browse boutiques, galleries & specialty shops along Daylesford\'s charming main street',          tag: 'Explore',    duration: 60, area: 'daylesford', img: mainst,      maps: 'https://maps.google.com/?q=Vincent+Street+Daylesford+VIC' },
           { id: 'lake-walk-sat',   emoji: '🚶', name: 'Lake Daylesford Walk',           desc: 'Flat, easy 4.7km loop around the lake (~1hr) — passes Wombat Flat & Central mineral springs',        tag: 'Nature',     duration: 60, area: 'daylesford', img: lake,        maps: 'https://maps.google.com/?q=Lake+Daylesford+Victoria' },
@@ -569,10 +570,15 @@ function parseClock(hhmm) {
 }
 
 // Walk a day's picks in order, stacking travel + duration from a fixed start time.
+// Where each day's plan effectively "starts from" for travel-time purposes.
+// Saturday starts from arriving in town (we're not checked in yet); Sun/Mon
+// start from Lily's Farm Studio since we wake up there.
+const DAY_START_AREA = ['daylesford', 'wheatsheaf', 'wheatsheaf'];
+
 function computeSchedule(dayIdx) {
   const items = plan.filter(p => p.day === dayIdx);
   let current = parseClock(dayStart[dayIdx]);
-  let prevArea = 'wheatsheaf'; // each day actually starts from Lily's Farm Studio (our Airbnb)
+  let prevArea = DAY_START_AREA[dayIdx] || 'wheatsheaf';
   return items.map(p => {
     const area = p.area || prevArea;
     const travel = getTravelTime(prevArea, area);
@@ -589,7 +595,7 @@ function computeSchedule(dayIdx) {
 // ─── DEFAULT PLAN ───────────────────────────────────────────
 // A curated full weekend so there's something to edit from rather than a blank slate.
 const DEFAULT_PLAN_IDS = [
-  'checkin-sat', 'lake-house-sat', 'airbnb-spa-sat',
+  'cliffys-lunch-sat', 'lake-walk-sat', 'checkin-sat', 'lake-house-sat', 'airbnb-spa-sat',
   'sunday-market', 'tipperary-track', 'farmers-arms', 'hepburn-spa-sun', 'kadota',
   'checkout-mon', 'lake-walk-mon', 'frank-connie-mon'
 ];
@@ -604,7 +610,7 @@ let customCounter = 0;
 let sortables = [];
 let viewMode = 'list'; // 'list' | 'timeline'
 // Sat starts at check-in (4pm). Sun is the sleep-in day. Mon is capped by 10am checkout.
-let dayStart = ['16:00', '10:30', '08:00']; // editable per-day start time, "HH:MM"
+let dayStart = ['13:30', '10:30', '08:00']; // editable per-day start time, "HH:MM"
 
 // ─── INIT ───────────────────────────────────────────────────
 function init() {
