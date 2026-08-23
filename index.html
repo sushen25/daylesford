@@ -172,15 +172,56 @@
     }
     .plan-day-header { background: var(--green); color: white; padding: 9px 14px; font-size: 13px; font-weight: 700; }
     .plan-item {
-      padding: 10px 14px; font-size: 14px;
+      padding: 10px 10px 10px 6px; font-size: 14px;
       border-bottom: 1px solid var(--bg);
-      display: flex; align-items: center; gap: 10px;
+      display: flex; align-items: center; gap: 8px;
+      background: var(--card);
     }
     .plan-item:last-child { border-bottom: none; }
-    .plan-item-info { flex: 1; }
+    .plan-item-info { flex: 1; min-width: 0; }
     .plan-item-name { font-weight: 600; font-size: 14px; }
     .plan-item-slot { font-size: 11px; color: #bbb; text-transform: uppercase; letter-spacing: 0.5px; margin-top: 1px; }
     .plan-empty { padding: 14px; font-size: 13px; color: #ccc; font-style: italic; }
+
+    .drag-handle {
+      cursor: grab; color: #ccc; font-size: 18px; flex-shrink: 0;
+      padding: 4px 2px; touch-action: none; -webkit-tap-highlight-color: transparent;
+    }
+    .drag-handle:active { cursor: grabbing; }
+    .plan-item-emoji { font-size: 17px; flex-shrink: 0; }
+    .plan-item-maps {
+      font-size: 11px; font-weight: 700; color: var(--muted);
+      text-decoration: none; flex-shrink: 0; padding: 4px;
+    }
+    .plan-item-remove {
+      background: none; border: none; color: #ccc; font-size: 15px;
+      cursor: pointer; padding: 4px 2px; flex-shrink: 0; line-height: 1;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .plan-item-remove:active { color: var(--amber); }
+    .plan-item.sortable-ghost { opacity: 0.4; background: var(--green-light); }
+    .plan-item.sortable-chosen { background: #f7f7f7; }
+    .plan-item.sortable-drag { box-shadow: 0 4px 14px rgba(0,0,0,0.18); }
+    .plan-list:empty { display: none; }
+
+    .plan-add-row {
+      display: flex; gap: 8px; align-items: center;
+      padding: 10px 14px; background: var(--bg);
+    }
+    .plan-add-input {
+      flex: 1; border: 1.5px solid var(--border); border-radius: 100px;
+      padding: 8px 14px; font-size: 13px; font-family: inherit;
+      background: white; color: var(--text);
+    }
+    .plan-add-input:focus { outline: none; border-color: var(--green); }
+    .plan-add-input::placeholder { color: #bbb; }
+    .plan-add-btn {
+      width: 30px; height: 30px; border-radius: 50%; border: none;
+      background: var(--green); color: white; font-size: 17px; font-weight: 700;
+      cursor: pointer; flex-shrink: 0; display: flex; align-items: center;
+      justify-content: center; line-height: 1; -webkit-tap-highlight-color: transparent;
+    }
+    .plan-add-btn:active { opacity: 0.8; }
 
     /* ─── Notes & Submit ─── */
     .notes-section { padding: 16px 12px 0; }
@@ -270,7 +311,7 @@
 <div class="panel" id="panel-3">
   <div class="plan-intro">
     <div class="plan-title">Your Weekend Plan</div>
-    <div class="plan-sub">Review your picks then send to Discord</div>
+    <div class="plan-sub">Drag ⠿ to reorder or move between days, add your own, then send to Discord</div>
   </div>
   <div id="plan-content"></div>
   <div class="notes-section">
@@ -286,6 +327,7 @@
 <!-- ─── Toast ─── -->
 <div class="toast" id="toast"></div>
 
+<script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.2/Sortable.min.js"></script>
 <script>
 // ─── CONFIG ─────────────────────────────────────────────────
 const DISCORD_WEBHOOK = 'YOUR_WEBHOOK_URL_HERE';
@@ -436,12 +478,34 @@ const DAYS = [
 
 // ─── STATE ──────────────────────────────────────────────────
 const selected = new Set();
+// plan: flat array of { uid, catalogId, day, emoji, name, maps, slotTime, custom }.
+// Array order = display order within each day; `day` = which day group it's in.
+// Both are freely edited by dragging, so this is the source of truth for the Plan tab.
+let plan = [];
+let customCounter = 0;
+let sortables = [];
 
 // ─── INIT ───────────────────────────────────────────────────
 function init() {
   DAYS.forEach((day, i) => renderPanel(day, i));
   updateCountdown();
   updatePlan();
+}
+
+function escapeHtml(str) {
+  const div = document.createElement('div');
+  div.textContent = str;
+  return div.innerHTML;
+}
+
+function getCatalogItem(id) {
+  for (let d = 0; d < DAYS.length; d++) {
+    for (const slot of DAYS[d].slots) {
+      const item = slot.items.find(i => i.id === id);
+      if (item) return { item, day: d, slotTime: slot.time };
+    }
+  }
+  return null;
 }
 
 function renderPanel(day, i) {
@@ -491,11 +555,78 @@ function toggle(id) {
   if (selected.has(id)) {
     selected.delete(id);
     card.classList.remove('selected');
+    plan = plan.filter(p => p.uid !== id);
   } else {
     selected.add(id);
     card.classList.add('selected');
+    const found = getCatalogItem(id);
+    if (found) {
+      plan.push({
+        uid: id, catalogId: id, day: found.day,
+        emoji: found.item.emoji, name: found.item.name, maps: found.item.maps,
+        slotTime: found.slotTime, custom: false
+      });
+    }
   }
   updatePlan();
+}
+
+function addCustomActivity(day) {
+  const input = document.getElementById(`custom-input-${day}`);
+  const name = input.value.trim();
+  if (!name) return;
+  customCounter++;
+  const uid = `custom-${Date.now()}-${customCounter}`;
+  plan.push({ uid, catalogId: null, day, emoji: '⭐', name, maps: null, slotTime: null, custom: true });
+  input.value = '';
+  updatePlan();
+  const newInput = document.getElementById(`custom-input-${day}`);
+  if (newInput) newInput.focus();
+}
+
+function removePlanItem(uid) {
+  const entry = plan.find(p => p.uid === uid);
+  if (!entry) return;
+  plan = plan.filter(p => p.uid !== uid);
+  if (entry.catalogId) {
+    selected.delete(entry.catalogId);
+    const card = document.getElementById(`card-${entry.catalogId}`);
+    if (card) card.classList.remove('selected');
+  }
+  updatePlan();
+}
+
+// Rebuild `plan` (order + day) from the actual DOM after a drag finishes.
+function syncPlanOrder() {
+  const newPlan = [];
+  document.querySelectorAll('.plan-list').forEach(list => {
+    const day = parseInt(list.dataset.day, 10);
+    list.querySelectorAll('.plan-item').forEach(el => {
+      const entry = plan.find(p => p.uid === el.dataset.uid);
+      if (entry) {
+        entry.day = day;
+        newPlan.push(entry);
+      }
+    });
+  });
+  plan = newPlan;
+  updatePlan();
+}
+
+function initSortables() {
+  sortables.forEach(s => s.destroy());
+  sortables = [];
+  document.querySelectorAll('.plan-list').forEach(list => {
+    sortables.push(new Sortable(list, {
+      group: 'plan-items',
+      animation: 150,
+      handle: '.drag-handle',
+      ghostClass: 'sortable-ghost',
+      chosenClass: 'sortable-chosen',
+      dragClass: 'sortable-drag',
+      onEnd: syncPlanOrder
+    }));
+  });
 }
 
 function switchTab(idx) {
@@ -513,53 +644,57 @@ function updateCountdown() {
 }
 
 function updatePlan() {
-  const total = selected.size;
+  const total = plan.length;
   const badge = document.getElementById('plan-badge');
   const sub = document.getElementById('plan-tab-sub');
-  sub.textContent = `${total} picked`;
+  sub.textContent = `${total} in plan`;
   badge.textContent = total;
   badge.classList.toggle('hidden', total === 0);
   document.getElementById('count-text').textContent =
-    `${total} ${total === 1 ? 'activity' : 'activities'} selected`;
+    `${total} ${total === 1 ? 'activity' : 'activities'} in your plan`;
 
   const container = document.getElementById('plan-content');
   let html = '';
 
-  DAYS.forEach(day => {
-    const picks = [];
-    day.slots.forEach(slot => {
-      slot.items.filter(a => selected.has(a.id)).forEach(a => {
-        picks.push({ emoji: a.emoji, name: a.name, maps: a.maps, slotTime: slot.time });
-      });
-    });
+  DAYS.forEach((day, dayIdx) => {
+    const picks = plan.filter(p => p.day === dayIdx);
 
     html += `<div class="plan-day">
-      <div class="plan-day-header">${day.label}</div>`;
+      <div class="plan-day-header">${day.label}</div>
+      <div class="plan-list" data-day="${dayIdx}" id="plan-list-${dayIdx}">`;
 
-    if (picks.length === 0) {
-      html += `<div class="plan-empty">Nothing selected yet</div>`;
-    } else {
-      picks.forEach(p => {
-        html += `
-          <div class="plan-item">
-            <span>${p.emoji}</span>
-            <div class="plan-item-info">
-              <div class="plan-item-name">${p.name}</div>
-              <div class="plan-item-slot">${p.slotTime.replace(/[^\w\s]/g, '').trim()}</div>
-            </div>
-            <a href="${p.maps}" target="_blank" rel="noopener"
-               style="font-size:11px;font-weight:700;color:var(--muted);text-decoration:none;flex-shrink:0">
-              📍
-            </a>
+    picks.forEach(p => {
+      const subLabel = p.custom ? 'Your addition' : (p.slotTime || '').replace(/[^\w\s]/g, '').trim();
+      html += `
+        <div class="plan-item" data-uid="${p.uid}">
+          <span class="drag-handle">⠿</span>
+          <span class="plan-item-emoji">${p.emoji}</span>
+          <div class="plan-item-info">
+            <div class="plan-item-name">${escapeHtml(p.name)}</div>
+            <div class="plan-item-slot">${subLabel}</div>
           </div>
-        `;
-      });
-    }
+          ${p.maps ? `<a class="plan-item-maps" href="${p.maps}" target="_blank" rel="noopener" onclick="event.stopPropagation()">📍</a>` : ''}
+          <button class="plan-item-remove" onclick="removePlanItem('${p.uid}')" aria-label="Remove">✕</button>
+        </div>
+      `;
+    });
 
-    html += '</div>';
+    html += `</div>`;
+    if (picks.length === 0) {
+      html += `<div class="plan-empty">Nothing planned yet — pick some activities or add your own below</div>`;
+    }
+    html += `
+      <div class="plan-add-row">
+        <input type="text" id="custom-input-${dayIdx}" class="plan-add-input"
+               placeholder="Add your own activity..."
+               onkeydown="if(event.key==='Enter') addCustomActivity(${dayIdx})">
+        <button class="plan-add-btn" onclick="addCustomActivity(${dayIdx})" aria-label="Add activity">+</button>
+      </div>
+    </div>`;
   });
 
   container.innerHTML = html;
+  initSortables();
 }
 
 // ─── DISCORD ─────────────────────────────────────────────────
@@ -576,13 +711,10 @@ async function sendPlan() {
 
   const notes = document.getElementById('trip-notes').value.trim();
 
-  const fields = DAYS.map(day => {
-    const picks = [];
-    day.slots.forEach(slot => {
-      slot.items.filter(a => selected.has(a.id)).forEach(a => {
-        picks.push(`${a.emoji} **${a.name}**`);
-      });
-    });
+  const fields = DAYS.map((day, dayIdx) => {
+    const picks = plan
+      .filter(p => p.day === dayIdx)
+      .map(p => `${p.emoji} **${p.name}**${p.custom ? ' _(custom)_' : ''}`);
     return {
       name: `📅 ${day.label}`,
       value: picks.length > 0 ? picks.join('\n') : '_Nothing selected_',
