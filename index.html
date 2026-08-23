@@ -165,12 +165,30 @@
     .plan-title { font-size: 22px; font-weight: 800; }
     .plan-sub { font-size: 13px; color: var(--muted); margin-top: 4px; }
 
+    .view-toggle { display: flex; gap: 6px; margin-top: 12px; }
+    .view-toggle-btn {
+      flex: 1; border: 1.5px solid var(--border); background: white; color: var(--muted);
+      font-size: 12px; font-weight: 700; padding: 8px; border-radius: 10px; cursor: pointer;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .view-toggle-btn.active { background: var(--green); border-color: var(--green); color: white; }
+
     .plan-day {
       margin: 12px 12px 0; background: var(--card);
       border-radius: 14px; overflow: hidden;
       box-shadow: 0 1px 3px rgba(0,0,0,0.05);
     }
-    .plan-day-header { background: var(--green); color: white; padding: 9px 14px; font-size: 13px; font-weight: 700; }
+    .plan-day-header {
+      background: var(--green); color: white; padding: 9px 14px; font-size: 13px; font-weight: 700;
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .day-start-wrap { display: flex; align-items: center; gap: 5px; font-weight: 500; }
+    .day-start-label { font-size: 10px; opacity: 0.8; text-transform: uppercase; letter-spacing: 0.5px; }
+    .day-start-input {
+      background: rgba(255,255,255,0.18); border: none; border-radius: 6px;
+      color: white; font-size: 12px; font-weight: 700; padding: 3px 5px;
+      font-family: inherit; color-scheme: dark;
+    }
     .plan-item {
       padding: 10px 10px 10px 6px; font-size: 14px;
       border-bottom: 1px solid var(--bg);
@@ -222,6 +240,35 @@
       justify-content: center; line-height: 1; -webkit-tap-highlight-color: transparent;
     }
     .plan-add-btn:active { opacity: 0.8; }
+    .plan-add-duration {
+      border: 1.5px solid var(--border); border-radius: 100px;
+      padding: 8px 6px; font-size: 12px; font-family: inherit;
+      background: white; color: var(--text); flex-shrink: 0;
+    }
+
+    /* ─── Timeline ─── */
+    .timeline-track { position: relative; margin: 0; }
+    .timeline-hour-row { position: absolute; left: 0; right: 0; border-top: 1px dashed var(--border); }
+    .timeline-hour-label {
+      position: absolute; left: 8px; top: -7px; font-size: 10px; font-weight: 800;
+      color: #bbb; background: var(--card); padding: 0 4px;
+    }
+    .timeline-travel {
+      position: absolute; left: 56px; right: 10px; border-radius: 4px;
+      background: repeating-linear-gradient(135deg, var(--bg), var(--bg) 5px, #e8e4df 5px, #e8e4df 10px);
+      overflow: hidden;
+    }
+    .timeline-travel-label {
+      position: absolute; left: 2px; width: 52px; text-align: right;
+      font-size: 9px; font-weight: 800; color: var(--muted); white-space: nowrap;
+    }
+    .timeline-block {
+      position: absolute; left: 56px; right: 10px;
+      background: var(--green-light); border-left: 3px solid var(--green);
+      border-radius: 6px; padding: 4px 8px; overflow: hidden;
+    }
+    .timeline-block-time { font-size: 10px; font-weight: 800; color: var(--green); }
+    .timeline-block-name { font-size: 12px; font-weight: 700; color: var(--text); margin-top: 1px; }
 
     /* ─── Notes & Submit ─── */
     .notes-section { padding: 16px 12px 0; }
@@ -312,6 +359,10 @@
   <div class="plan-intro">
     <div class="plan-title">Your Weekend Plan</div>
     <div class="plan-sub">Drag ⠿ to reorder or move between days, add your own, then send to Discord</div>
+    <div class="view-toggle">
+      <button class="view-toggle-btn active" id="view-toggle-list" onclick="setViewMode('list')">📋 List</button>
+      <button class="view-toggle-btn" id="view-toggle-timeline" onclick="setViewMode('timeline')">🕐 Timeline</button>
+    </div>
   </div>
   <div id="plan-content"></div>
   <div class="notes-section">
@@ -378,22 +429,22 @@ const DAYS = [
       {
         time: '☀️  Afternoon', id: 'afternoon',
         items: [
-          { id: 'vincent-st',      emoji: '🛍️', name: 'Vincent Street',               desc: 'Browse boutiques, galleries & specialty shops along Daylesford\'s charming main street',          tag: 'Explore',    img: mainst,      maps: 'https://maps.google.com/?q=Vincent+Street+Daylesford+VIC' },
-          { id: 'lake-walk-sat',   emoji: '🚶', name: 'Lake Daylesford Walk',           desc: 'Flat, easy 4.7km loop around the lake (~1hr) — passes Wombat Flat & Central mineral springs',        tag: 'Nature',     img: lake,        maps: 'https://maps.google.com/?q=Lake+Daylesford+Victoria' },
-          { id: 'convent-sat',     emoji: '🎨', name: 'The Convent Gallery',            desc: 'Seven art galleries, chapel & museum in a stunning former convent building',                        tag: 'Culture',    img: convent,     maps: 'https://maps.google.com/?q=The+Convent+Gallery+Daylesford+Victoria' },
-          { id: 'mill-markets-sat',emoji: '🏺', name: 'The Mill Markets',              desc: 'One of Australia\'s biggest antique & vintage markets — great for a browse',                        tag: 'Shopping',   img: millMkts,    maps: 'https://maps.google.com/?q=The+Mill+Markets+Daylesford+Victoria' },
-          { id: 'wombat-hill-sat', emoji: '🌳', name: 'Wombat Hill Botanic Gardens',   desc: 'Historic gardens with sweeping panoramic views over the countryside',                               tag: 'Nature',     img: wombat,      maps: 'https://maps.google.com/?q=Wombat+Hill+Botanic+Gardens+Daylesford+Victoria' },
-          { id: 'jubilee-lake-sat', emoji: '🦚', name: 'Jubilee Lake Loop',            desc: 'Easy, flat 40-min circuit around a gold-rush-era reservoir — resident peacocks & a photogenic wooden bridge', tag: 'Nature', img: lake, maps: 'https://maps.google.com/?q=Jubilee+Lake+Daylesford+Victoria' },
+          { id: 'vincent-st',      emoji: '🛍️', name: 'Vincent Street',               desc: 'Browse boutiques, galleries & specialty shops along Daylesford\'s charming main street',          tag: 'Explore',    duration: 60, area: 'daylesford', img: mainst,      maps: 'https://maps.google.com/?q=Vincent+Street+Daylesford+VIC' },
+          { id: 'lake-walk-sat',   emoji: '🚶', name: 'Lake Daylesford Walk',           desc: 'Flat, easy 4.7km loop around the lake (~1hr) — passes Wombat Flat & Central mineral springs',        tag: 'Nature',     duration: 60, area: 'daylesford', img: lake,        maps: 'https://maps.google.com/?q=Lake+Daylesford+Victoria' },
+          { id: 'convent-sat',     emoji: '🎨', name: 'The Convent Gallery',            desc: 'Seven art galleries, chapel & museum in a stunning former convent building',                        tag: 'Culture',    duration: 60, area: 'daylesford', img: convent,     maps: 'https://maps.google.com/?q=The+Convent+Gallery+Daylesford+Victoria' },
+          { id: 'mill-markets-sat',emoji: '🏺', name: 'The Mill Markets',              desc: 'One of Australia\'s biggest antique & vintage markets — great for a browse',                        tag: 'Shopping',   duration: 60, area: 'daylesford', img: millMkts,    maps: 'https://maps.google.com/?q=The+Mill+Markets+Daylesford+Victoria' },
+          { id: 'wombat-hill-sat', emoji: '🌳', name: 'Wombat Hill Botanic Gardens',   desc: 'Historic gardens with sweeping panoramic views over the countryside',                               tag: 'Nature',     duration: 45, area: 'daylesford', img: wombat,      maps: 'https://maps.google.com/?q=Wombat+Hill+Botanic+Gardens+Daylesford+Victoria' },
+          { id: 'jubilee-lake-sat', emoji: '🦚', name: 'Jubilee Lake Loop',            desc: 'Easy, flat 40-min circuit around a gold-rush-era reservoir — resident peacocks & a photogenic wooden bridge', tag: 'Nature', duration: 45, area: 'jubilee', img: lake, maps: 'https://maps.google.com/?q=Jubilee+Lake+Daylesford+Victoria' },
         ]
       },
       {
         time: '🌙  Evening', id: 'evening',
         items: [
-          { id: 'lake-house-sat',  emoji: '🍽️', name: 'Lake House Restaurant',        desc: 'Iconic fine dining on the lake edge — Daylesford\'s most celebrated restaurant. Book ahead!',    tag: '⭐ Top Pick', hot: true, img: lhRest,  maps: 'https://maps.google.com/?q=Lake+House+Restaurant+Daylesford+Victoria' },
-          { id: 'boathouse-sat',   emoji: '⛵', name: 'Boathouse Restaurant',          desc: 'Lakeside dining with a relaxed atmosphere and beautiful water views',                               tag: 'Dining',     img: boathouse,   maps: 'https://maps.google.com/?q=Boathouse+Restaurant+Daylesford+Victoria' },
-          { id: 'cliffys-sat',     emoji: '🥗', name: 'Cliffy\'s Emporium',            desc: 'Beloved local favourite with fresh, seasonal dishes in a cosy setting',                             tag: 'Casual',     img: cliffys,     maps: 'https://maps.google.com/?q=Cliffy%27s+Emporium+Daylesford+Victoria' },
-          { id: 'daylesford-hotel-sat', emoji: '🏠', name: 'Daylesford Hotel',         desc: 'Classic country pub with good food, a beer garden, wood-fired pizza & sunset balcony views',      tag: 'Pub',        img: dlHotel,     maps: 'https://maps.google.com/?q=Daylesford+Hotel+Victoria' },
-          { id: 'hepburn-bath-sat',emoji: '♨️', name: 'Hepburn Bathhouse — Evening Soak', desc: 'Unwind in the mineral pools after the drive — the perfect way to arrive in spa country',      tag: 'Spa',        img: bathhouse,   maps: 'https://maps.google.com/?q=Hepburn+Bathhouse+and+Spa+Hepburn+Springs+Victoria' },
+          { id: 'lake-house-sat',  emoji: '🍽️', name: 'Lake House Restaurant',        desc: 'Iconic fine dining on the lake edge — Daylesford\'s most celebrated restaurant. Book ahead!',    tag: '⭐ Top Pick', hot: true, duration: 120, area: 'daylesford', img: lhRest,  maps: 'https://maps.google.com/?q=Lake+House+Restaurant+Daylesford+Victoria' },
+          { id: 'boathouse-sat',   emoji: '⛵', name: 'Boathouse Restaurant',          desc: 'Lakeside dining with a relaxed atmosphere and beautiful water views',                               tag: 'Dining',     duration: 90, area: 'daylesford', img: boathouse,   maps: 'https://maps.google.com/?q=Boathouse+Restaurant+Daylesford+Victoria' },
+          { id: 'cliffys-sat',     emoji: '🥗', name: 'Cliffy\'s Emporium',            desc: 'Beloved local favourite with fresh, seasonal dishes in a cosy setting',                             tag: 'Casual',     duration: 75, area: 'daylesford', img: cliffys,     maps: 'https://maps.google.com/?q=Cliffy%27s+Emporium+Daylesford+Victoria' },
+          { id: 'daylesford-hotel-sat', emoji: '🏠', name: 'Daylesford Hotel',         desc: 'Classic country pub with good food, a beer garden, wood-fired pizza & sunset balcony views',      tag: 'Pub',        duration: 90, area: 'daylesford', img: dlHotel,     maps: 'https://maps.google.com/?q=Daylesford+Hotel+Victoria' },
+          { id: 'hepburn-bath-sat',emoji: '♨️', name: 'Hepburn Bathhouse — Evening Soak', desc: 'Unwind in the mineral pools after the drive — the perfect way to arrive in spa country',      tag: 'Spa',        duration: 90, area: 'hepburn', img: bathhouse,   maps: 'https://maps.google.com/?q=Hepburn+Bathhouse+and+Spa+Hepburn+Springs+Victoria' },
         ]
       }
     ]
@@ -405,45 +456,45 @@ const DAYS = [
       {
         time: '☀️  Morning', id: 'morning',
         items: [
-          { id: 'sunday-market',   emoji: '🛒', name: 'Daylesford Sunday Market',      desc: 'Fresh produce, artisan goods & local crafts every Sunday morning — don\'t miss it!',              tag: '⭐ Top Pick', hot: true, img: market,  maps: 'https://maps.google.com/?q=Daylesford+Sunday+Market+Victoria' },
-          { id: 'harry-me',        emoji: '☕', name: 'Harry\'s Hepburn',              desc: 'Much-loved Hepburn Springs cafe — excellent coffee and breakfast',                                 tag: 'Cafe',       img: harrys,      maps: 'https://maps.google.com/?q=Harry%27s+Hepburn+Hepburn+Springs+Victoria' },
-          { id: 'frank-connie-morn', emoji: '🥐', name: 'Frank & Connie\'s Kitchen',  desc: 'Hepburn Springs neighbourhood favourite — fresh seasonal dishes drawing on French, Greek & Middle Eastern cuisines', tag: 'Cafe', img: frankConnie, maps: 'https://maps.google.com/?q=Frank+and+Connies+Kitchen+Hepburn+Springs+Victoria' },
-          { id: 'mineral-springs', emoji: '💧', name: 'Mineral Springs Walk',         desc: 'Taste the different natural mineral springs at the historic Locarno Pavilion reserve — quirky & fun', tag: 'Unique',  img: locarno,     maps: 'https://maps.google.com/?q=Hepburn+Mineral+Springs+Reserve+Victoria' },
-          { id: 'tipperary-track', emoji: '🥾', name: 'Tipperary Track',              desc: 'Well-signed 5km forest trail through the Great Dividing Range, connecting Daylesford & Hepburn Springs (~1.5hrs)', tag: 'Walk', img: blowhole, maps: 'https://maps.google.com/?q=Tipperary+Track+Daylesford+Victoria' },
-          { id: 'sailors-falls-sun', emoji: '💦', name: 'Sailors Falls',              desc: '20m waterfall that becomes a double falls after rain — short walk from the car park, or push on 6.5km through forest to Lake Daylesford', tag: 'Waterfall', img: sailors, maps: 'https://maps.google.com/?q=Sailors+Falls+Daylesford+Victoria' },
-          { id: 'dry-diggings-sun', emoji: '⛏️', name: 'Dry Diggings Track',          desc: 'Gold-rush era trail past old water races & mining relics through box-ironbark forest',              tag: 'Walk',       img: blowhole,    maps: 'https://maps.google.com/?q=Dry+Diggings+Track+Hepburn+Regional+Park+Victoria' },
-          { id: 'wombat-hill-sun', emoji: '🌳', name: 'Wombat Hill Botanic Gardens',  desc: 'Peaceful morning stroll through historic gardens',                                                  tag: 'Nature',     img: wombat,      maps: 'https://maps.google.com/?q=Wombat+Hill+Botanic+Gardens+Daylesford+Victoria' },
+          { id: 'sunday-market',   emoji: '🛒', name: 'Daylesford Sunday Market',      desc: 'Fresh produce, artisan goods & local crafts every Sunday morning — don\'t miss it!',              tag: '⭐ Top Pick', hot: true, duration: 60, area: 'daylesford', img: market,  maps: 'https://maps.google.com/?q=Daylesford+Sunday+Market+Victoria' },
+          { id: 'harry-me',        emoji: '☕', name: 'Harry\'s Hepburn',              desc: 'Much-loved Hepburn Springs cafe — excellent coffee and breakfast',                                 tag: 'Cafe',       duration: 45, area: 'hepburn', img: harrys,      maps: 'https://maps.google.com/?q=Harry%27s+Hepburn+Hepburn+Springs+Victoria' },
+          { id: 'frank-connie-morn', emoji: '🥐', name: 'Frank & Connie\'s Kitchen',  desc: 'Hepburn Springs neighbourhood favourite — fresh seasonal dishes drawing on French, Greek & Middle Eastern cuisines', tag: 'Cafe', duration: 45, area: 'hepburn', img: frankConnie, maps: 'https://maps.google.com/?q=Frank+and+Connies+Kitchen+Hepburn+Springs+Victoria' },
+          { id: 'mineral-springs', emoji: '💧', name: 'Mineral Springs Walk',         desc: 'Taste the different natural mineral springs at the historic Locarno Pavilion reserve — quirky & fun', tag: 'Unique',  duration: 45, area: 'hepburn', img: locarno,     maps: 'https://maps.google.com/?q=Hepburn+Mineral+Springs+Reserve+Victoria' },
+          { id: 'tipperary-track', emoji: '🥾', name: 'Tipperary Track',              desc: 'Well-signed 5km forest trail through the Great Dividing Range, connecting Daylesford & Hepburn Springs (~1.5hrs)', tag: 'Walk', duration: 90, area: 'hepburn', img: blowhole, maps: 'https://maps.google.com/?q=Tipperary+Track+Daylesford+Victoria' },
+          { id: 'sailors-falls-sun', emoji: '💦', name: 'Sailors Falls',              desc: '20m waterfall that becomes a double falls after rain — short walk from the car park, or push on 6.5km through forest to Lake Daylesford', tag: 'Waterfall', duration: 60, area: 'sailorsfalls', img: sailors, maps: 'https://maps.google.com/?q=Sailors+Falls+Daylesford+Victoria' },
+          { id: 'dry-diggings-sun', emoji: '⛏️', name: 'Dry Diggings Track',          desc: 'Gold-rush era trail past old water races & mining relics through box-ironbark forest',              tag: 'Walk',       duration: 90, area: 'hepburn', img: blowhole,    maps: 'https://maps.google.com/?q=Dry+Diggings+Track+Hepburn+Regional+Park+Victoria' },
+          { id: 'wombat-hill-sun', emoji: '🌳', name: 'Wombat Hill Botanic Gardens',  desc: 'Peaceful morning stroll through historic gardens',                                                  tag: 'Nature',     duration: 45, area: 'daylesford', img: wombat,      maps: 'https://maps.google.com/?q=Wombat+Hill+Botanic+Gardens+Daylesford+Victoria' },
         ]
       },
       {
         time: '🍴  Lunch', id: 'lunch',
         items: [
-          { id: 'chocolate-mill',  emoji: '🍫', name: 'The Chocolate Mill',            desc: 'Watch chocolatiers at work, hot chocolate, cake & handmade sweets — 10 min drive from town',     tag: 'Cafe',       img: chocMill,    maps: 'https://maps.google.com/?q=The+Chocolate+Mill+Mount+Franklin+Victoria' },
-          { id: 'farmers-arms',    emoji: '🍺', name: 'Farmers Arms Hotel',            desc: '165-year-old pub with a produce-driven menu & impressive regional wine list',                      tag: 'Pub Lunch',  img: farmersArms, maps: 'https://maps.google.com/?q=Farmers+Arms+Hotel+Daylesford+Victoria' },
-          { id: 'surly-goat-lunch',emoji: '🐐', name: 'The Surly Goat',               desc: 'Craft beer, great food & relaxed vibes in Hepburn Springs',                                        tag: 'Casual',     img: surlyGoat,   maps: 'https://maps.google.com/?q=The+Surly+Goat+Hepburn+Springs+Victoria' },
-          { id: 'cliffys-sun',     emoji: '🥗', name: 'Cliffy\'s Emporium',            desc: 'Fresh seasonal dishes in a cosy Daylesford favourite',                                             tag: 'Casual',     img: cliffys,     maps: 'https://maps.google.com/?q=Cliffy%27s+Emporium+Daylesford+Victoria' },
+          { id: 'chocolate-mill',  emoji: '🍫', name: 'The Chocolate Mill',            desc: 'Watch chocolatiers at work, hot chocolate, cake & handmade sweets — 10 min drive from town',     tag: 'Cafe',       duration: 45, area: 'mtfranklin', img: chocMill,    maps: 'https://maps.google.com/?q=The+Chocolate+Mill+Mount+Franklin+Victoria' },
+          { id: 'farmers-arms',    emoji: '🍺', name: 'Farmers Arms Hotel',            desc: '165-year-old pub with a produce-driven menu & impressive regional wine list',                      tag: 'Pub Lunch',  duration: 75, area: 'daylesford', img: farmersArms, maps: 'https://maps.google.com/?q=Farmers+Arms+Hotel+Daylesford+Victoria' },
+          { id: 'surly-goat-lunch',emoji: '🐐', name: 'The Surly Goat',               desc: 'Craft beer, great food & relaxed vibes in Hepburn Springs',                                        tag: 'Casual',     duration: 75, area: 'hepburn', img: surlyGoat,   maps: 'https://maps.google.com/?q=The+Surly+Goat+Hepburn+Springs+Victoria' },
+          { id: 'cliffys-sun',     emoji: '🥗', name: 'Cliffy\'s Emporium',            desc: 'Fresh seasonal dishes in a cosy Daylesford favourite',                                             tag: 'Casual',     duration: 75, area: 'daylesford', img: cliffys,     maps: 'https://maps.google.com/?q=Cliffy%27s+Emporium+Daylesford+Victoria' },
         ]
       },
       {
         time: '☕  Afternoon', id: 'afternoon',
         items: [
-          { id: 'hepburn-spa-sun', emoji: '♨️', name: 'Hepburn Bathhouse & Spa',      desc: 'Freshly renovated with private bathing rooms, mineral pools & spa treatments. Book ahead!',       tag: '⭐ Top Pick', hot: true, img: bathhouse, maps: 'https://maps.google.com/?q=Hepburn+Bathhouse+and+Spa+Hepburn+Springs+Victoria' },
-          { id: 'lake-house-spa',  emoji: '🧖', name: 'The Spa at Lake House',         desc: 'Iconic luxury spa on the edge of Lake Daylesford, established 1984',                               tag: 'Spa',        img: lhSpa,       maps: 'https://maps.google.com/?q=The+Spa+at+Lake+House+Daylesford+Victoria' },
-          { id: 'passing-clouds',  emoji: '🍷', name: 'Passing Clouds Winery',         desc: 'Chardonnay & pinot on a gorgeous sun-drenched deck — one of the region\'s best',                  tag: 'Winery',     img: passClouds,  maps: 'https://maps.google.com/?q=Passing+Clouds+Winery+Musk+Victoria' },
-          { id: 'paramoor',        emoji: '🍾', name: 'Paramoor Winery',               desc: 'Minimal intervention wines — elegant pinot noir & riesling in a beautiful setting',                tag: 'Winery',     img: paramoor,    maps: 'https://maps.google.com/?q=Paramoor+Winery+Daylesford+Victoria' },
-          { id: 'daylesford-cider',emoji: '🍏', name: 'Daylesford Cider',              desc: 'Handcrafted ciders in an English-style tavern cellar amid picturesque orchards',                   tag: 'Tasting',    img: dlCider,     maps: 'https://maps.google.com/?q=Daylesford+Cider+Company+Musk+Victoria' },
-          { id: 'peppermint-sun',  emoji: '🌿', name: 'Peppermint Springs Retreat',    desc: 'Peaceful day spa with treatments and mineral soaking pools',                                        tag: 'Spa',        img: peppermint,  maps: 'https://maps.google.com/?q=Peppermint+Springs+Retreat+Daylesford+Victoria' },
-          { id: 'trentham-falls',  emoji: '🌊', name: 'Trentham Falls',                desc: 'Victoria\'s tallest single-drop waterfall — 32m plunge over a basalt cliff, easy platform viewing. ~20min drive', tag: 'Day Trip', img: trentham, maps: 'https://maps.google.com/?q=Trentham+Falls+Victoria' },
+          { id: 'hepburn-spa-sun', emoji: '♨️', name: 'Hepburn Bathhouse & Spa',      desc: 'Freshly renovated with private bathing rooms, mineral pools & spa treatments. Book ahead!',       tag: '⭐ Top Pick', hot: true, duration: 120, area: 'hepburn', img: bathhouse, maps: 'https://maps.google.com/?q=Hepburn+Bathhouse+and+Spa+Hepburn+Springs+Victoria' },
+          { id: 'lake-house-spa',  emoji: '🧖', name: 'The Spa at Lake House',         desc: 'Iconic luxury spa on the edge of Lake Daylesford, established 1984',                               tag: 'Spa',        duration: 120, area: 'daylesford', img: lhSpa,       maps: 'https://maps.google.com/?q=The+Spa+at+Lake+House+Daylesford+Victoria' },
+          { id: 'passing-clouds',  emoji: '🍷', name: 'Passing Clouds Winery',         desc: 'Chardonnay & pinot on a gorgeous sun-drenched deck — one of the region\'s best',                  tag: 'Winery',     duration: 60, area: 'musk', img: passClouds,  maps: 'https://maps.google.com/?q=Passing+Clouds+Winery+Musk+Victoria' },
+          { id: 'paramoor',        emoji: '🍾', name: 'Paramoor Winery',               desc: 'Minimal intervention wines — elegant pinot noir & riesling in a beautiful setting',                tag: 'Winery',     duration: 60, area: 'daylesford', img: paramoor,    maps: 'https://maps.google.com/?q=Paramoor+Winery+Daylesford+Victoria' },
+          { id: 'daylesford-cider',emoji: '🍏', name: 'Daylesford Cider',              desc: 'Handcrafted ciders in an English-style tavern cellar amid picturesque orchards',                   tag: 'Tasting',    duration: 60, area: 'musk', img: dlCider,     maps: 'https://maps.google.com/?q=Daylesford+Cider+Company+Musk+Victoria' },
+          { id: 'peppermint-sun',  emoji: '🌿', name: 'Peppermint Springs Retreat',    desc: 'Peaceful day spa with treatments and mineral soaking pools',                                        tag: 'Spa',        duration: 90, area: 'daylesford', img: peppermint,  maps: 'https://maps.google.com/?q=Peppermint+Springs+Retreat+Daylesford+Victoria' },
+          { id: 'trentham-falls',  emoji: '🌊', name: 'Trentham Falls',                desc: 'Victoria\'s tallest single-drop waterfall — 32m plunge over a basalt cliff, easy platform viewing. ~20min drive', tag: 'Day Trip', duration: 60, area: 'trentham', img: trentham, maps: 'https://maps.google.com/?q=Trentham+Falls+Victoria' },
         ]
       },
       {
         time: '🌙  Evening', id: 'evening',
         items: [
-          { id: 'kadota',          emoji: '🌙', name: 'Kadota',                         desc: 'Exquisite Japanese degustation using seasonal local ingredients — Daylesford\'s finest dining experience', tag: '⭐ Top Pick', hot: true, img: kadota, maps: 'https://maps.google.com/?q=Kadota+Restaurant+Daylesford+Victoria' },
-          { id: 'bistro-terroir',  emoji: '🥩', name: 'Bistro Terroir',                desc: 'French-inspired neighbourhood bistro celebrating local produce — ranked #2 in Daylesford',       tag: 'Dining',     img: terroir,     maps: 'https://maps.google.com/?q=Bistro+Terroir+Daylesford+Victoria' },
-          { id: 'lake-house-sun',  emoji: '🍽️', name: 'Lake House Restaurant',        desc: 'If you saved it for tonight — two chef hats, worth every cent. Book well ahead.',                  tag: '⭐ Top Pick', hot: true, img: lhRest, maps: 'https://maps.google.com/?q=Lake+House+Restaurant+Daylesford+Victoria' },
-          { id: 'boathouse-sun',   emoji: '⛵', name: 'Boathouse Restaurant',          desc: 'Relaxed lakeside dinner with a lovely evening atmosphere',                                          tag: 'Dining',     img: boathouse,   maps: 'https://maps.google.com/?q=Boathouse+Restaurant+Daylesford+Victoria' },
-          { id: 'cliffys-dinner',  emoji: '🥗', name: 'Cliffy\'s Emporium',            desc: 'Fresh seasonal dinner at a Daylesford institution',                                                 tag: 'Casual',     img: cliffys,     maps: 'https://maps.google.com/?q=Cliffy%27s+Emporium+Daylesford+Victoria' },
+          { id: 'kadota',          emoji: '🌙', name: 'Kadota',                         desc: 'Exquisite Japanese degustation using seasonal local ingredients — Daylesford\'s finest dining experience', tag: '⭐ Top Pick', hot: true, duration: 120, area: 'daylesford', img: kadota, maps: 'https://maps.google.com/?q=Kadota+Restaurant+Daylesford+Victoria' },
+          { id: 'bistro-terroir',  emoji: '🥩', name: 'Bistro Terroir',                desc: 'French-inspired neighbourhood bistro celebrating local produce — ranked #2 in Daylesford',       tag: 'Dining',     duration: 90, area: 'daylesford', img: terroir,     maps: 'https://maps.google.com/?q=Bistro+Terroir+Daylesford+Victoria' },
+          { id: 'lake-house-sun',  emoji: '🍽️', name: 'Lake House Restaurant',        desc: 'If you saved it for tonight — two chef hats, worth every cent. Book well ahead.',                  tag: '⭐ Top Pick', hot: true, duration: 120, area: 'daylesford', img: lhRest, maps: 'https://maps.google.com/?q=Lake+House+Restaurant+Daylesford+Victoria' },
+          { id: 'boathouse-sun',   emoji: '⛵', name: 'Boathouse Restaurant',          desc: 'Relaxed lakeside dinner with a lovely evening atmosphere',                                          tag: 'Dining',     duration: 90, area: 'daylesford', img: boathouse,   maps: 'https://maps.google.com/?q=Boathouse+Restaurant+Daylesford+Victoria' },
+          { id: 'cliffys-dinner',  emoji: '🥗', name: 'Cliffy\'s Emporium',            desc: 'Fresh seasonal dinner at a Daylesford institution',                                                 tag: 'Casual',     duration: 75, area: 'daylesford', img: cliffys,     maps: 'https://maps.google.com/?q=Cliffy%27s+Emporium+Daylesford+Victoria' },
         ]
       }
     ]
@@ -455,41 +506,118 @@ const DAYS = [
       {
         time: '🌅  Morning', id: 'morning',
         items: [
-          { id: 'lake-walk-mon',   emoji: '🚶', name: 'Lake Daylesford Walk',           desc: 'A peaceful 4.7km lakeside loop (~1hr) to start the final morning',                                 tag: 'Nature',     img: lake,        maps: 'https://maps.google.com/?q=Lake+Daylesford+Victoria' },
-          { id: 'convent-mon',     emoji: '🎨', name: 'The Convent Gallery',            desc: 'Explore the seven gallery spaces, chapel & museum before heading home',                            tag: 'Culture',    img: convent,     maps: 'https://maps.google.com/?q=The+Convent+Gallery+Daylesford+Victoria' },
-          { id: 'mill-markets-mon',emoji: '🏺', name: 'Mill Markets',                  desc: 'Last chance for antique treasures before hitting the road',                                         tag: 'Shopping',   img: millMkts,    maps: 'https://maps.google.com/?q=The+Mill+Markets+Daylesford+Victoria' },
-          { id: 'argyle-walk-mon', emoji: '🥾', name: 'Argyle Walk',                   desc: 'Family-friendly out-and-back along Wild Cat Creek through eucalypt forest, passing a disused gold mine shaft', tag: 'Walk', img: blowhole, maps: 'https://maps.google.com/?q=Argyle+Walk+Hepburn+Regional+Park+Victoria' },
-          { id: 'peppermint-mon',  emoji: '🌿', name: 'Peppermint Springs Spa',         desc: 'One last treatment to carry the relaxation home with you',                                         tag: 'Spa',        img: peppermint,  maps: 'https://maps.google.com/?q=Peppermint+Springs+Retreat+Daylesford+Victoria' },
+          { id: 'lake-walk-mon',   emoji: '🚶', name: 'Lake Daylesford Walk',           desc: 'A peaceful 4.7km lakeside loop (~1hr) to start the final morning',                                 tag: 'Nature',     duration: 60, area: 'daylesford', img: lake,        maps: 'https://maps.google.com/?q=Lake+Daylesford+Victoria' },
+          { id: 'convent-mon',     emoji: '🎨', name: 'The Convent Gallery',            desc: 'Explore the seven gallery spaces, chapel & museum before heading home',                            tag: 'Culture',    duration: 60, area: 'daylesford', img: convent,     maps: 'https://maps.google.com/?q=The+Convent+Gallery+Daylesford+Victoria' },
+          { id: 'mill-markets-mon',emoji: '🏺', name: 'Mill Markets',                  desc: 'Last chance for antique treasures before hitting the road',                                         tag: 'Shopping',   duration: 60, area: 'daylesford', img: millMkts,    maps: 'https://maps.google.com/?q=The+Mill+Markets+Daylesford+Victoria' },
+          { id: 'argyle-walk-mon', emoji: '🥾', name: 'Argyle Walk',                   desc: 'Family-friendly out-and-back along Wild Cat Creek through eucalypt forest, passing a disused gold mine shaft', tag: 'Walk', duration: 75, area: 'hepburn', img: blowhole, maps: 'https://maps.google.com/?q=Argyle+Walk+Hepburn+Regional+Park+Victoria' },
+          { id: 'peppermint-mon',  emoji: '🌿', name: 'Peppermint Springs Spa',         desc: 'One last treatment to carry the relaxation home with you',                                         tag: 'Spa',        duration: 90, area: 'daylesford', img: peppermint,  maps: 'https://maps.google.com/?q=Peppermint+Springs+Retreat+Daylesford+Victoria' },
         ]
       },
       {
         time: '🥞  Brunch (before heading off)', id: 'brunch',
         items: [
-          { id: 'frank-connie-mon',emoji: '🥐', name: 'Frank & Connie\'s Kitchen',     desc: 'The perfect farewell brunch spot in Hepburn Springs',                                             tag: 'Cafe',       img: frankConnie, maps: 'https://maps.google.com/?q=Frank+and+Connies+Kitchen+Hepburn+Springs+Victoria' },
-          { id: 'surly-goat-mon',  emoji: '🐐', name: 'The Surly Goat',               desc: 'Relaxed brunch with good coffee before the drive back to Melbourne',                                tag: 'Casual',     img: surlyGoat,   maps: 'https://maps.google.com/?q=The+Surly+Goat+Hepburn+Springs+Victoria' },
-          { id: 'cliffys-mon',     emoji: '🥗', name: 'Cliffy\'s Emporium',            desc: 'Great brunch in central Daylesford to fuel the drive home',                                        tag: 'Cafe',       img: cliffys,     maps: 'https://maps.google.com/?q=Cliffy%27s+Emporium+Daylesford+Victoria' },
-          { id: 'chocolate-mill-mon', emoji: '🍫', name: 'The Chocolate Mill',         desc: 'Sweet send-off — hot chocolate & pastries before the road',                                        tag: 'Cafe',       img: chocMill,    maps: 'https://maps.google.com/?q=The+Chocolate+Mill+Mount+Franklin+Victoria' },
-          { id: 'boathouse-mon',   emoji: '⛵', name: 'Boathouse Brunch',              desc: 'A lovely lakeside farewell with beautiful views',                                                   tag: 'Dining',     img: boathouse,   maps: 'https://maps.google.com/?q=Boathouse+Restaurant+Daylesford+Victoria' },
+          { id: 'frank-connie-mon',emoji: '🥐', name: 'Frank & Connie\'s Kitchen',     desc: 'The perfect farewell brunch spot in Hepburn Springs',                                             tag: 'Cafe',       duration: 60, area: 'hepburn', img: frankConnie, maps: 'https://maps.google.com/?q=Frank+and+Connies+Kitchen+Hepburn+Springs+Victoria' },
+          { id: 'surly-goat-mon',  emoji: '🐐', name: 'The Surly Goat',               desc: 'Relaxed brunch with good coffee before the drive back to Melbourne',                                tag: 'Casual',     duration: 60, area: 'hepburn', img: surlyGoat,   maps: 'https://maps.google.com/?q=The+Surly+Goat+Hepburn+Springs+Victoria' },
+          { id: 'cliffys-mon',     emoji: '🥗', name: 'Cliffy\'s Emporium',            desc: 'Great brunch in central Daylesford to fuel the drive home',                                        tag: 'Cafe',       duration: 60, area: 'daylesford', img: cliffys,     maps: 'https://maps.google.com/?q=Cliffy%27s+Emporium+Daylesford+Victoria' },
+          { id: 'chocolate-mill-mon', emoji: '🍫', name: 'The Chocolate Mill',         desc: 'Sweet send-off — hot chocolate & pastries before the road',                                        tag: 'Cafe',       duration: 45, area: 'mtfranklin', img: chocMill,    maps: 'https://maps.google.com/?q=The+Chocolate+Mill+Mount+Franklin+Victoria' },
+          { id: 'boathouse-mon',   emoji: '⛵', name: 'Boathouse Brunch',              desc: 'A lovely lakeside farewell with beautiful views',                                                   tag: 'Dining',     duration: 75, area: 'daylesford', img: boathouse,   maps: 'https://maps.google.com/?q=Boathouse+Restaurant+Daylesford+Victoria' },
         ]
       }
     ]
   }
 ];
 
+// ─── TRAVEL TIME ────────────────────────────────────────────
+// Rough drive-time minutes between the loose "areas" activities cluster in.
+// Not a real distance matrix — just enough to make the calendar's travel
+// gaps feel plausible. Unlisted pairs fall back to 15 min.
+const AREA_TRAVEL = {
+  'daylesford|daylesford': 5,   'daylesford|hepburn': 8,      'daylesford|jubilee': 8,
+  'daylesford|sailorsfalls': 12,'daylesford|musk': 12,        'daylesford|mtfranklin': 15,
+  'daylesford|trentham': 20,    'hepburn|hepburn': 5,         'hepburn|jubilee': 12,
+  'hepburn|sailorsfalls': 15,   'hepburn|musk': 15,           'hepburn|mtfranklin': 18,
+  'hepburn|trentham': 25,       'jubilee|jubilee': 5,         'jubilee|sailorsfalls': 15,
+  'jubilee|musk': 15,           'jubilee|mtfranklin': 18,     'jubilee|trentham': 25,
+  'sailorsfalls|sailorsfalls': 5,'sailorsfalls|musk': 8,      'sailorsfalls|mtfranklin': 15,
+  'sailorsfalls|trentham': 15,  'musk|musk': 5,               'musk|mtfranklin': 15,
+  'musk|trentham': 15,          'mtfranklin|mtfranklin': 5,   'mtfranklin|trentham': 10,
+  'trentham|trentham': 5,
+};
+function getTravelTime(a, b) {
+  if (!a || !b) return 10; // unknown location (e.g. a custom activity) — flat estimate
+  const key = [a, b].sort().join('|');
+  return AREA_TRAVEL[key] !== undefined ? AREA_TRAVEL[key] : 15;
+}
+
+function formatClock(mins) {
+  const h = Math.floor(mins / 60) % 24;
+  const m = ((mins % 60) + 60) % 60;
+  const ampm = h >= 12 ? 'PM' : 'AM';
+  const h12 = h % 12 === 0 ? 12 : h % 12;
+  return `${h12}:${String(m).padStart(2, '0')} ${ampm}`;
+}
+function parseClock(hhmm) {
+  const [h, m] = hhmm.split(':').map(Number);
+  return h * 60 + m;
+}
+
+// Walk a day's picks in order, stacking travel + duration from a fixed start time.
+function computeSchedule(dayIdx) {
+  const items = plan.filter(p => p.day === dayIdx);
+  let current = parseClock(dayStart[dayIdx]);
+  let prevArea = 'daylesford'; // assume starting from accommodation in town
+  return items.map(p => {
+    const area = p.area || prevArea;
+    const travel = getTravelTime(prevArea, area);
+    const travelStart = current;
+    const start = current + travel;
+    const duration = p.duration || 60;
+    const end = start + duration;
+    prevArea = area;
+    current = end;
+    return Object.assign({}, p, { area, travel, travelStart, start, end, duration });
+  });
+}
+
+// ─── DEFAULT PLAN ───────────────────────────────────────────
+// A curated full weekend so there's something to edit from rather than a blank slate.
+const DEFAULT_PLAN_IDS = [
+  'lake-walk-sat', 'vincent-st', 'lake-house-sat',
+  'sunday-market', 'tipperary-track', 'farmers-arms', 'hepburn-spa-sun', 'kadota',
+  'lake-walk-mon', 'frank-connie-mon'
+];
+
 // ─── STATE ──────────────────────────────────────────────────
 const selected = new Set();
-// plan: flat array of { uid, catalogId, day, emoji, name, maps, slotTime, custom }.
+// plan: flat array of { uid, catalogId, day, emoji, name, maps, slotTime, duration, area, custom }.
 // Array order = display order within each day; `day` = which day group it's in.
 // Both are freely edited by dragging, so this is the source of truth for the Plan tab.
 let plan = [];
 let customCounter = 0;
 let sortables = [];
+let viewMode = 'list'; // 'list' | 'timeline'
+let dayStart = ['14:00', '08:00', '08:00']; // editable per-day start time, "HH:MM"
 
 // ─── INIT ───────────────────────────────────────────────────
 function init() {
+  seedDefaultPlan();
   DAYS.forEach((day, i) => renderPanel(day, i));
   updateCountdown();
   updatePlan();
+}
+
+function seedDefaultPlan() {
+  DEFAULT_PLAN_IDS.forEach(id => {
+    const found = getCatalogItem(id);
+    if (!found) return;
+    selected.add(id);
+    plan.push({
+      uid: id, catalogId: id, day: found.day,
+      emoji: found.item.emoji, name: found.item.name, maps: found.item.maps,
+      slotTime: found.slotTime, duration: found.item.duration, area: found.item.area,
+      custom: false
+    });
+  });
 }
 
 function escapeHtml(str) {
@@ -521,7 +649,7 @@ function renderPanel(day, i) {
     html += `<div class="slot-header">${slot.time}</div>`;
     slot.items.forEach(item => {
       html += `
-        <div class="card" id="card-${item.id}" onclick="toggle('${item.id}')">
+        <div class="card${selected.has(item.id) ? ' selected' : ''}" id="card-${item.id}" onclick="toggle('${item.id}')">
           <img class="card-img" src="${item.img}" loading="lazy" alt="${item.name}"
                onerror="this.style.display='none'">
           <div class="card-inner">
@@ -564,7 +692,8 @@ function toggle(id) {
       plan.push({
         uid: id, catalogId: id, day: found.day,
         emoji: found.item.emoji, name: found.item.name, maps: found.item.maps,
-        slotTime: found.slotTime, custom: false
+        slotTime: found.slotTime, duration: found.item.duration, area: found.item.area,
+        custom: false
       });
     }
   }
@@ -573,11 +702,13 @@ function toggle(id) {
 
 function addCustomActivity(day) {
   const input = document.getElementById(`custom-input-${day}`);
+  const durationSelect = document.getElementById(`custom-duration-${day}`);
   const name = input.value.trim();
   if (!name) return;
+  const duration = durationSelect ? parseInt(durationSelect.value, 10) : 60;
   customCounter++;
   const uid = `custom-${Date.now()}-${customCounter}`;
-  plan.push({ uid, catalogId: null, day, emoji: '⭐', name, maps: null, slotTime: null, custom: true });
+  plan.push({ uid, catalogId: null, day, emoji: '⭐', name, maps: null, slotTime: null, duration, area: null, custom: true });
   input.value = '';
   updatePlan();
   const newInput = document.getElementById(`custom-input-${day}`);
@@ -629,6 +760,56 @@ function initSortables() {
   });
 }
 
+function setDayStart(dayIdx, value) {
+  if (!value) return;
+  dayStart[dayIdx] = value;
+  updatePlan();
+}
+
+function setViewMode(mode) {
+  viewMode = mode;
+  updatePlan();
+}
+
+const PX_PER_MIN = 1.15;
+
+function renderTimelineDay(dayIdx, schedule) {
+  if (schedule.length === 0) {
+    return '<div class="plan-empty">Nothing planned yet — switch to List view to add activities</div>';
+  }
+  const dayStartMin = parseClock(dayStart[dayIdx]);
+  let gridStart = Math.floor(dayStartMin / 60) * 60;
+  let gridEnd = Math.max(Math.ceil(schedule[schedule.length - 1].end / 60) * 60, gridStart + 4 * 60);
+
+  let html = `<div class="timeline-track" style="height:${(gridEnd - gridStart) * PX_PER_MIN}px">`;
+
+  for (let h = gridStart; h <= gridEnd; h += 60) {
+    const top = (h - gridStart) * PX_PER_MIN;
+    html += `<div class="timeline-hour-row" style="top:${top}px"><span class="timeline-hour-label">${formatClock(h).replace(':00', '')}</span></div>`;
+  }
+
+  schedule.forEach(p => {
+    if (p.travel > 0) {
+      const top = (p.travelStart - gridStart) * PX_PER_MIN;
+      const height = p.travel * PX_PER_MIN;
+      const midTop = (p.travelStart + p.travel / 2 - gridStart) * PX_PER_MIN;
+      html += `<div class="timeline-travel" style="top:${top}px; height:${height}px"></div>`;
+      html += `<div class="timeline-travel-label" style="top:${midTop - 7}px">🚗${p.travel}m</div>`;
+    }
+    const top = (p.start - gridStart) * PX_PER_MIN;
+    const height = Math.max(p.duration * PX_PER_MIN, 30);
+    html += `
+      <div class="timeline-block" style="top:${top}px; height:${height}px">
+        <div class="timeline-block-time">${formatClock(p.start)} – ${formatClock(p.end)}</div>
+        <div class="timeline-block-name">${p.emoji} ${escapeHtml(p.name)}</div>
+      </div>
+    `;
+  });
+
+  html += `</div>`;
+  return html;
+}
+
 function switchTab(idx) {
   document.querySelectorAll('.panel').forEach((p, i) => p.classList.toggle('active', i === idx));
   document.querySelectorAll('.tab-btn').forEach((t, i) => t.classList.toggle('active', i === idx));
@@ -653,48 +834,69 @@ function updatePlan() {
   document.getElementById('count-text').textContent =
     `${total} ${total === 1 ? 'activity' : 'activities'} in your plan`;
 
+  document.getElementById('view-toggle-list').classList.toggle('active', viewMode === 'list');
+  document.getElementById('view-toggle-timeline').classList.toggle('active', viewMode === 'timeline');
+
   const container = document.getElementById('plan-content');
   let html = '';
 
   DAYS.forEach((day, dayIdx) => {
-    const picks = plan.filter(p => p.day === dayIdx);
+    const schedule = computeSchedule(dayIdx);
 
     html += `<div class="plan-day">
-      <div class="plan-day-header">${day.label}</div>
-      <div class="plan-list" data-day="${dayIdx}" id="plan-list-${dayIdx}">`;
+      <div class="plan-day-header">
+        <span>${day.label}</span>
+        <span class="day-start-wrap">
+          <span class="day-start-label">Start</span>
+          <input type="time" class="day-start-input" value="${dayStart[dayIdx]}" onchange="setDayStart(${dayIdx}, this.value)">
+        </span>
+      </div>`;
 
-    picks.forEach(p => {
-      const subLabel = p.custom ? 'Your addition' : (p.slotTime || '').replace(/[^\w\s]/g, '').trim();
-      html += `
-        <div class="plan-item" data-uid="${p.uid}">
-          <span class="drag-handle">⠿</span>
-          <span class="plan-item-emoji">${p.emoji}</span>
-          <div class="plan-item-info">
-            <div class="plan-item-name">${escapeHtml(p.name)}</div>
-            <div class="plan-item-slot">${subLabel}</div>
+    if (viewMode === 'timeline') {
+      html += renderTimelineDay(dayIdx, schedule);
+    } else {
+      html += `<div class="plan-list" data-day="${dayIdx}" id="plan-list-${dayIdx}">`;
+      schedule.forEach(p => {
+        const timeLabel = `${formatClock(p.start)} – ${formatClock(p.end)}`;
+        const travelLabel = p.travel > 0 ? `🚗 ${p.travel}m · ` : '';
+        html += `
+          <div class="plan-item" data-uid="${p.uid}">
+            <span class="drag-handle">⠿</span>
+            <span class="plan-item-emoji">${p.emoji}</span>
+            <div class="plan-item-info">
+              <div class="plan-item-name">${escapeHtml(p.name)}</div>
+              <div class="plan-item-slot">${travelLabel}${timeLabel}</div>
+            </div>
+            ${p.maps ? `<a class="plan-item-maps" href="${p.maps}" target="_blank" rel="noopener" onclick="event.stopPropagation()">📍</a>` : ''}
+            <button class="plan-item-remove" onclick="removePlanItem('${p.uid}')" aria-label="Remove">✕</button>
           </div>
-          ${p.maps ? `<a class="plan-item-maps" href="${p.maps}" target="_blank" rel="noopener" onclick="event.stopPropagation()">📍</a>` : ''}
-          <button class="plan-item-remove" onclick="removePlanItem('${p.uid}')" aria-label="Remove">✕</button>
-        </div>
-      `;
-    });
-
-    html += `</div>`;
-    if (picks.length === 0) {
-      html += `<div class="plan-empty">Nothing planned yet — pick some activities or add your own below</div>`;
+        `;
+      });
+      html += `</div>`;
+      if (schedule.length === 0) {
+        html += `<div class="plan-empty">Nothing planned yet — pick some activities or add your own below</div>`;
+      }
     }
+
     html += `
       <div class="plan-add-row">
         <input type="text" id="custom-input-${dayIdx}" class="plan-add-input"
                placeholder="Add your own activity..."
                onkeydown="if(event.key==='Enter') addCustomActivity(${dayIdx})">
+        <select id="custom-duration-${dayIdx}" class="plan-add-duration">
+          <option value="30">30m</option>
+          <option value="45">45m</option>
+          <option value="60" selected>1h</option>
+          <option value="90">1.5h</option>
+          <option value="120">2h</option>
+        </select>
         <button class="plan-add-btn" onclick="addCustomActivity(${dayIdx})" aria-label="Add activity">+</button>
       </div>
     </div>`;
   });
 
   container.innerHTML = html;
-  initSortables();
+  if (viewMode === 'list') initSortables();
 }
 
 // ─── DISCORD ─────────────────────────────────────────────────
@@ -712,9 +914,10 @@ async function sendPlan() {
   const notes = document.getElementById('trip-notes').value.trim();
 
   const fields = DAYS.map((day, dayIdx) => {
-    const picks = plan
-      .filter(p => p.day === dayIdx)
-      .map(p => `${p.emoji} **${p.name}**${p.custom ? ' _(custom)_' : ''}`);
+    const schedule = computeSchedule(dayIdx);
+    const picks = schedule.map(p =>
+      `${formatClock(p.start)}–${formatClock(p.end)} ${p.emoji} **${p.name}**${p.custom ? ' _(custom)_' : ''}`
+    );
     return {
       name: `📅 ${day.label}`,
       value: picks.length > 0 ? picks.join('\n') : '_Nothing selected_',
