@@ -35,111 +35,41 @@
       color: white;
       padding: 20px 16px 18px;
     }
-
-    .header-row {
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-start;
-    }
-
-    .header-title {
-      font-size: 24px;
-      font-weight: 800;
-      letter-spacing: -0.5px;
-      line-height: 1.1;
-    }
-
-    .header-sub {
-      font-size: 13px;
-      opacity: 0.75;
-      margin-top: 3px;
-    }
-
-
+    .header-row { display: flex; justify-content: space-between; align-items: flex-start; }
+    .header-title { font-size: 24px; font-weight: 800; letter-spacing: -0.5px; line-height: 1.1; }
+    .header-sub { font-size: 13px; opacity: 0.75; margin-top: 3px; }
     .countdown {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      background: rgba(255,255,255,0.14);
-      border-radius: 12px;
-      padding: 10px 14px;
-      margin-top: 14px;
+      display: flex; align-items: center; gap: 10px;
+      background: rgba(255,255,255,0.14); border-radius: 12px;
+      padding: 10px 14px; margin-top: 14px;
     }
-
-    .countdown-num {
-      font-size: 32px;
-      font-weight: 900;
-      line-height: 1;
-    }
-
-    .countdown-label {
-      font-size: 14px;
-      font-weight: 700;
-      line-height: 1.3;
-    }
-
-    .countdown-date {
-      font-size: 12px;
-      opacity: 0.75;
-    }
+    .countdown-num { font-size: 32px; font-weight: 900; line-height: 1; }
+    .countdown-label { font-size: 14px; font-weight: 700; line-height: 1.3; }
+    .countdown-date { font-size: 12px; opacity: 0.75; }
 
     /* ─── Tabs ─── */
     .tabs {
-      background: white;
-      display: flex;
+      background: white; display: flex;
       border-bottom: 1px solid var(--border);
-      position: sticky;
-      top: 0;
-      z-index: 100;
+      position: sticky; top: 0; z-index: 100;
       box-shadow: 0 2px 8px rgba(0,0,0,0.06);
     }
-
     .tab-btn {
-      flex: 1;
-      padding: 12px 4px 10px;
-      text-align: center;
-      font-size: 13px;
-      font-weight: 700;
-      color: var(--muted);
-      border: none;
-      background: none;
-      cursor: pointer;
-      border-bottom: 2px solid transparent;
-      transition: color 0.15s;
-      -webkit-tap-highlight-color: transparent;
-      position: relative;
+      flex: 1; padding: 12px 4px 10px; text-align: center;
+      font-size: 13px; font-weight: 700; color: var(--muted);
+      border: none; background: none; cursor: pointer;
+      border-bottom: 2px solid transparent; transition: color 0.15s;
+      -webkit-tap-highlight-color: transparent; position: relative;
     }
-
-    .tab-btn.active {
-      color: var(--green);
-      border-bottom-color: var(--green);
-    }
-
-    .tab-sub {
-      display: block;
-      font-size: 10px;
-      font-weight: 500;
-      opacity: 0.65;
-      margin-top: 1px;
-    }
-
+    .tab-btn.active { color: var(--green); border-bottom-color: var(--green); }
+    .tab-sub { display: block; font-size: 10px; font-weight: 500; opacity: 0.65; margin-top: 1px; }
     .tab-badge {
-      position: absolute;
-      top: 6px;
-      right: 8px;
-      background: var(--amber);
-      color: white;
-      font-size: 9px;
-      font-weight: 800;
-      min-width: 16px;
-      height: 16px;
-      border-radius: 8px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 0 3px;
+      position: absolute; top: 6px; right: 8px;
+      background: var(--amber); color: white;
+      font-size: 9px; font-weight: 800;
+      min-width: 16px; height: 16px; border-radius: 8px;
+      display: flex; align-items: center; justify-content: center; padding: 0 3px;
     }
-
     .tab-badge.hidden { display: none; }
 
     /* ─── Panels ─── */
@@ -148,36 +78,21 @@
 
     /* ─── Day Banner ─── */
     .day-banner {
-      background: white;
-      padding: 12px 16px;
+      background: white; padding: 12px 16px;
       border-bottom: 1px solid var(--border);
-      display: flex;
-      align-items: center;
-      gap: 10px;
+      display: flex; align-items: center; gap: 10px;
     }
-
     .day-chip {
-      background: var(--green-light);
-      color: var(--green);
-      font-size: 11px;
-      font-weight: 800;
-      padding: 4px 10px;
-      border-radius: 100px;
+      background: var(--green-light); color: var(--green);
+      font-size: 11px; font-weight: 800; padding: 4px 10px; border-radius: 100px;
     }
-
-    .day-note {
-      font-size: 13px;
-      color: var(--muted);
-    }
+    .day-note { font-size: 13px; color: var(--muted); }
 
     /* ─── Slot Header ─── */
     .slot-header {
       padding: 18px 16px 6px;
-      font-size: 11px;
-      font-weight: 800;
-      text-transform: uppercase;
-      letter-spacing: 1.2px;
-      color: #aaa;
+      font-size: 11px; font-weight: 800;
+      text-transform: uppercase; letter-spacing: 1.2px; color: #aaa;
     }
 
     /* ─── Cards ─── */
@@ -185,10 +100,7 @@
       margin: 0 12px 8px;
       background: var(--card);
       border-radius: 14px;
-      padding: 13px 13px 13px 14px;
-      display: flex;
-      align-items: flex-start;
-      gap: 11px;
+      overflow: hidden;
       box-shadow: 0 1px 3px rgba(0,0,0,0.05);
       cursor: pointer;
       border: 2px solid transparent;
@@ -196,187 +108,118 @@
       -webkit-tap-highlight-color: transparent;
       user-select: none;
     }
-
     .card:active { opacity: 0.85; }
-
     .card.selected {
       border-color: var(--green);
       background: #f0f8f4;
       box-shadow: 0 2px 10px rgba(45,99,72,0.12);
     }
 
+    .card-img {
+      width: 100%; height: 130px;
+      object-fit: cover; display: block;
+    }
+
+    .card-inner {
+      display: flex; align-items: flex-start;
+      gap: 11px; padding: 12px 12px 12px 13px;
+    }
+
     .card-icon { font-size: 26px; line-height: 1; flex-shrink: 0; margin-top: 1px; }
-
     .card-body { flex: 1; min-width: 0; }
-
     .card-name { font-size: 15px; font-weight: 700; line-height: 1.2; }
-
     .card-desc { font-size: 13px; color: #777; margin-top: 3px; line-height: 1.4; }
+
+    .card-footer {
+      display: flex; align-items: center;
+      justify-content: space-between; margin-top: 7px;
+    }
 
     .card-tag {
       display: inline-block;
-      font-size: 10px;
-      font-weight: 800;
-      letter-spacing: 0.3px;
-      color: var(--green);
-      background: var(--green-light);
-      padding: 2px 8px;
-      border-radius: 100px;
-      margin-top: 6px;
+      font-size: 10px; font-weight: 800; letter-spacing: 0.3px;
+      color: var(--green); background: var(--green-light);
+      padding: 2px 8px; border-radius: 100px;
     }
+    .card-tag.hot { color: var(--amber); background: var(--amber-light); }
 
-    .card-tag.hot {
-      color: var(--amber);
-      background: var(--amber-light);
+    .card-maps {
+      display: inline-flex; align-items: center; gap: 3px;
+      font-size: 11px; font-weight: 700; color: var(--muted);
+      text-decoration: none; padding: 3px 0;
     }
+    .card-maps:hover { color: var(--green); }
 
     .card-check {
-      width: 22px;
-      height: 22px;
-      border-radius: 50%;
-      border: 2px solid #ddd;
-      flex-shrink: 0;
-      margin-top: 3px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
+      width: 22px; height: 22px; border-radius: 50%;
+      border: 2px solid #ddd; flex-shrink: 0; margin-top: 3px;
+      display: flex; align-items: center; justify-content: center;
       transition: all 0.15s;
     }
-
-    .card.selected .card-check {
-      background: var(--green);
-      border-color: var(--green);
-    }
-
-    .check-icon {
-      display: none;
-      width: 10px;
-      height: 8px;
-    }
-
+    .card.selected .card-check { background: var(--green); border-color: var(--green); }
+    .check-icon { display: none; width: 10px; height: 8px; }
     .card.selected .check-icon { display: block; }
 
     /* ─── Plan Tab ─── */
-    .plan-intro {
-      padding: 18px 16px 4px;
-    }
-
+    .plan-intro { padding: 18px 16px 4px; }
     .plan-title { font-size: 22px; font-weight: 800; }
     .plan-sub { font-size: 13px; color: var(--muted); margin-top: 4px; }
 
     .plan-day {
-      margin: 12px 12px 0;
-      background: var(--card);
-      border-radius: 14px;
-      overflow: hidden;
+      margin: 12px 12px 0; background: var(--card);
+      border-radius: 14px; overflow: hidden;
       box-shadow: 0 1px 3px rgba(0,0,0,0.05);
     }
-
-    .plan-day-header {
-      background: var(--green);
-      color: white;
-      padding: 9px 14px;
-      font-size: 13px;
-      font-weight: 700;
-    }
-
+    .plan-day-header { background: var(--green); color: white; padding: 9px 14px; font-size: 13px; font-weight: 700; }
     .plan-item {
-      padding: 10px 14px;
-      font-size: 14px;
+      padding: 10px 14px; font-size: 14px;
       border-bottom: 1px solid var(--bg);
-      display: flex;
-      align-items: center;
-      gap: 10px;
+      display: flex; align-items: center; gap: 10px;
     }
-
     .plan-item:last-child { border-bottom: none; }
-
     .plan-item-info { flex: 1; }
     .plan-item-name { font-weight: 600; font-size: 14px; }
     .plan-item-slot { font-size: 11px; color: #bbb; text-transform: uppercase; letter-spacing: 0.5px; margin-top: 1px; }
-
-    .plan-empty {
-      padding: 14px;
-      font-size: 13px;
-      color: #ccc;
-      font-style: italic;
-    }
+    .plan-empty { padding: 14px; font-size: 13px; color: #ccc; font-style: italic; }
 
     /* ─── Notes & Submit ─── */
     .notes-section { padding: 16px 12px 0; }
-
     .section-label {
-      font-size: 11px;
-      font-weight: 800;
-      text-transform: uppercase;
-      letter-spacing: 1.2px;
-      color: #aaa;
-      margin-bottom: 8px;
+      font-size: 11px; font-weight: 800; text-transform: uppercase;
+      letter-spacing: 1.2px; color: #aaa; margin-bottom: 8px;
     }
-
     textarea {
-      width: 100%;
-      background: var(--card);
-      border: 2px solid var(--border);
-      border-radius: 14px;
-      padding: 12px 14px;
-      font-size: 14px;
-      font-family: inherit;
-      color: var(--text);
-      resize: none;
-      line-height: 1.5;
+      width: 100%; background: var(--card);
+      border: 2px solid var(--border); border-radius: 14px;
+      padding: 12px 14px; font-size: 14px; font-family: inherit;
+      color: var(--text); resize: none; line-height: 1.5;
     }
-
     textarea:focus { outline: none; border-color: var(--green); }
     textarea::placeholder { color: #ccc; }
 
     .submit-section { padding: 14px 12px 0; }
-
     .send-btn {
       width: 100%;
       background: linear-gradient(135deg, var(--green-dark), var(--green));
-      color: white;
-      border: none;
-      border-radius: 14px;
-      padding: 17px;
-      font-size: 16px;
-      font-weight: 800;
-      cursor: pointer;
-      -webkit-tap-highlight-color: transparent;
-      transition: opacity 0.15s;
+      color: white; border: none; border-radius: 14px;
+      padding: 17px; font-size: 16px; font-weight: 800; cursor: pointer;
+      -webkit-tap-highlight-color: transparent; transition: opacity 0.15s;
       letter-spacing: 0.2px;
     }
-
     .send-btn:active { opacity: 0.85; }
     .send-btn:disabled { background: #ccc; cursor: not-allowed; }
-
-    .count-text {
-      text-align: center;
-      font-size: 13px;
-      color: var(--muted);
-      margin-top: 10px;
-      padding-bottom: 8px;
-    }
-
+    .count-text { text-align: center; font-size: 13px; color: var(--muted); margin-top: 10px; padding-bottom: 8px; }
 
     /* ─── Toast ─── */
     .toast {
-      position: fixed;
-      bottom: 28px;
-      left: 50%;
+      position: fixed; bottom: 28px; left: 50%;
       transform: translateX(-50%) translateY(80px);
-      background: var(--green-dark);
-      color: white;
-      padding: 11px 20px;
-      border-radius: 100px;
-      font-size: 14px;
-      font-weight: 600;
-      z-index: 9999;
+      background: var(--green-dark); color: white;
+      padding: 11px 20px; border-radius: 100px;
+      font-size: 14px; font-weight: 600; z-index: 9999;
       transition: transform 0.3s cubic-bezier(0.34, 1.4, 0.64, 1);
-      white-space: nowrap;
-      pointer-events: none;
+      white-space: nowrap; pointer-events: none;
     }
-
     .toast.show { transform: translateX(-50%) translateY(0); }
   </style>
 </head>
@@ -403,16 +246,13 @@
 <!-- ─── Tabs ─── -->
 <div class="tabs">
   <button class="tab-btn active" onclick="switchTab(0)">
-    Sat 29
-    <span class="tab-sub">Arrive PM</span>
+    Sat 29<span class="tab-sub">Arrive PM</span>
   </button>
   <button class="tab-btn" onclick="switchTab(1)">
-    Sun 30
-    <span class="tab-sub">Full Day</span>
+    Sun 30<span class="tab-sub">Full Day</span>
   </button>
   <button class="tab-btn" onclick="switchTab(2)">
-    Mon 31
-    <span class="tab-sub">Leave PM</span>
+    Mon 31<span class="tab-sub">Leave PM</span>
   </button>
   <button class="tab-btn" onclick="switchTab(3)">
     My Plan
@@ -447,6 +287,24 @@
 <div class="toast" id="toast"></div>
 
 <script>
+// ─── CONFIG ─────────────────────────────────────────────────
+const DISCORD_WEBHOOK = 'YOUR_WEBHOOK_URL_HERE';
+
+// ─── Wikimedia Commons images (real Daylesford photos) ──────
+const WM = 'https://upload.wikimedia.org/wikipedia/commons/';
+const IMG = {
+  lake:     WM + '4/48/Daylesford_Lake_Victoria_Australia_%287085530203%29.jpg',
+  wombat:   WM + '9/92/Wombat_Hill_Botanic_Gardens_tower.jpg',
+  mainst:   WM + 'e/e8/Main_Street%2C_Daylesford.jpg',
+  market:   WM + '8/84/Daylesford_Sunday_Market.jpg',
+  coffee:   WM + 'd/d8/Coffee_Time%2C_Daylesford%2C_Victoria_Australia_%284826478686%29.jpg',
+  bathhouse:WM + '2/26/Bathhouse_hepburn_springs.jpg',
+  boathouse:WM + '3/36/Aerial_perspective_of_Daylesford_Boathouse.jpg',
+};
+
+// Seeded picsum for everything else (consistent per seed)
+const P = s => `https://picsum.photos/seed/${s}/800/400`;
+
 // ─── DATA ───────────────────────────────────────────────────
 const DAYS = [
   {
@@ -454,25 +312,23 @@ const DAYS = [
     note: 'Arriving afternoon',
     slots: [
       {
-        time: '☀️  Afternoon',
-        id: 'afternoon',
+        time: '☀️  Afternoon', id: 'afternoon',
         items: [
-          { id: 'vincent-st', emoji: '🛍️', name: 'Vincent Street', desc: 'Browse boutiques, galleries & specialty shops along Daylesford\'s charming main street', tag: 'Explore' },
-          { id: 'lake-walk-sat', emoji: '🚶', name: 'Lake Daylesford Walk', desc: 'Easy, peaceful lakeside loop — perfect first impression of the town', tag: 'Nature' },
-          { id: 'convent-sat', emoji: '🎨', name: 'The Convent Gallery', desc: 'Seven art galleries, chapel & museum in a stunning former convent building', tag: 'Culture' },
-          { id: 'mill-markets-sat', emoji: '🏺', name: 'The Mill Markets', desc: 'One of Australia\'s biggest antique & vintage markets — great for a browse', tag: 'Shopping' },
-          { id: 'wombat-hill-sat', emoji: '🌳', name: 'Wombat Hill Botanic Gardens', desc: 'Historic gardens with sweeping panoramic views over the countryside', tag: 'Nature' },
+          { id: 'vincent-st',    emoji: '🛍️', name: 'Vincent Street',           desc: 'Browse boutiques, galleries & specialty shops along Daylesford\'s charming main street',         tag: 'Explore',    img: IMG.mainst,    maps: 'https://maps.google.com/?q=Vincent+Street+Daylesford+VIC' },
+          { id: 'lake-walk-sat', emoji: '🚶', name: 'Lake Daylesford Walk',      desc: 'Easy, peaceful lakeside loop — perfect first impression of the town',                             tag: 'Nature',     img: IMG.lake,      maps: 'https://maps.google.com/?q=Lake+Daylesford+Victoria' },
+          { id: 'convent-sat',   emoji: '🎨', name: 'The Convent Gallery',       desc: 'Seven art galleries, chapel & museum in a stunning former convent building',                       tag: 'Culture',    img: P('convent-daylesford'),    maps: 'https://maps.google.com/?q=The+Convent+Gallery+Daylesford+Victoria' },
+          { id: 'mill-markets-sat', emoji: '🏺', name: 'The Mill Markets',       desc: 'One of Australia\'s biggest antique & vintage markets — great for a browse',                       tag: 'Shopping',   img: P('mill-markets-daylesford'), maps: 'https://maps.google.com/?q=The+Mill+Markets+Daylesford+Victoria' },
+          { id: 'wombat-hill-sat', emoji: '🌳', name: 'Wombat Hill Botanic Gardens', desc: 'Historic gardens with sweeping panoramic views over the countryside',                          tag: 'Nature',     img: IMG.wombat,    maps: 'https://maps.google.com/?q=Wombat+Hill+Botanic+Gardens+Daylesford+Victoria' },
         ]
       },
       {
-        time: '🌙  Evening',
-        id: 'evening',
+        time: '🌙  Evening', id: 'evening',
         items: [
-          { id: 'lake-house-sat', emoji: '🍽️', name: 'Lake House Restaurant', desc: 'Iconic fine dining on the lake edge — Daylesford\'s most celebrated restaurant. Book ahead!', tag: '⭐ Top Pick', hot: true },
-          { id: 'boathouse-sat', emoji: '⛵', name: 'Boathouse Restaurant', desc: 'Lakeside dining with a relaxed atmosphere and beautiful water views', tag: 'Dining' },
-          { id: 'cliffys-sat', emoji: '🥗', name: 'Cliffy\'s Emporium', desc: 'Beloved local favourite with fresh, seasonal dishes in a cosy setting', tag: 'Casual' },
-          { id: 'daylesford-hotel-sat', emoji: '🏠', name: 'Daylesford Hotel', desc: 'Classic country pub with good food and a warm, welcoming atmosphere', tag: 'Pub' },
-          { id: 'hepburn-bath-sat', emoji: '♨️', name: 'Hepburn Bathhouse — Evening Soak', desc: 'Unwind in the mineral pools after the drive — the perfect way to arrive in spa country', tag: 'Spa' },
+          { id: 'lake-house-sat', emoji: '🍽️', name: 'Lake House Restaurant',   desc: 'Iconic fine dining on the lake edge — Daylesford\'s most celebrated restaurant. Book ahead!',   tag: '⭐ Top Pick', hot: true, img: P('lake-house-restaurant-daylesford'), maps: 'https://maps.google.com/?q=Lake+House+Restaurant+Daylesford+Victoria' },
+          { id: 'boathouse-sat', emoji: '⛵', name: 'Boathouse Restaurant',      desc: 'Lakeside dining with a relaxed atmosphere and beautiful water views',                              tag: 'Dining',     img: IMG.boathouse, maps: 'https://maps.google.com/?q=Boathouse+Restaurant+Daylesford+Victoria' },
+          { id: 'cliffys-sat',   emoji: '🥗', name: 'Cliffy\'s Emporium',       desc: 'Beloved local favourite with fresh, seasonal dishes in a cosy setting',                            tag: 'Casual',     img: P('cliffys-emporium-daylesford'), maps: 'https://maps.google.com/?q=Cliffy%27s+Emporium+Daylesford+Victoria' },
+          { id: 'daylesford-hotel-sat', emoji: '🏠', name: 'Daylesford Hotel',   desc: 'Classic country pub with good food and a warm, welcoming atmosphere',                             tag: 'Pub',        img: P('daylesford-hotel-pub'),         maps: 'https://maps.google.com/?q=Daylesford+Hotel+Victoria' },
+          { id: 'hepburn-bath-sat', emoji: '♨️', name: 'Hepburn Bathhouse — Evening Soak', desc: 'Unwind in the mineral pools after the drive — the perfect way to arrive in spa country', tag: 'Spa',        img: IMG.bathhouse, maps: 'https://maps.google.com/?q=Hepburn+Bathhouse+and+Spa+Hepburn+Springs+Victoria' },
         ]
       }
     ]
@@ -482,48 +338,44 @@ const DAYS = [
     note: 'Full day to explore',
     slots: [
       {
-        time: '☀️  Morning',
-        id: 'morning',
+        time: '☀️  Morning', id: 'morning',
         items: [
-          { id: 'sunday-market', emoji: '🛒', name: 'Daylesford Sunday Market', desc: 'Fresh produce, artisan goods & local crafts every Sunday morning — don\'t miss it!', tag: '⭐ Top Pick', hot: true },
-          { id: 'harry-me', emoji: '☕', name: 'Coffee at Harry & Me', desc: 'Much-loved Hepburn Springs cafe — excellent coffee and breakfast', tag: 'Cafe' },
-          { id: 'frank-connie-morn', emoji: '🥐', name: 'Frank & Connie\'s', desc: 'Hepburn Springs neighbourhood favourite for breakfast & morning coffee', tag: 'Cafe' },
-          { id: 'mineral-springs', emoji: '💧', name: 'Mineral Springs Walk', desc: 'Taste the different natural mineral springs dotted around the region — quirky & fun', tag: 'Unique' },
-          { id: 'hepburn-walk', emoji: '🥾', name: 'Hepburn Springs Trail', desc: '30–40 min bush walk connecting Daylesford & Hepburn Springs through beautiful parkland', tag: 'Walk' },
-          { id: 'wombat-hill-sun', emoji: '🌳', name: 'Wombat Hill Botanic Gardens', desc: 'Peaceful morning stroll through historic gardens', tag: 'Nature' },
+          { id: 'sunday-market', emoji: '🛒', name: 'Daylesford Sunday Market',  desc: 'Fresh produce, artisan goods & local crafts every Sunday morning — don\'t miss it!',             tag: '⭐ Top Pick', hot: true, img: IMG.market,   maps: 'https://maps.google.com/?q=Daylesford+Sunday+Market+Victoria' },
+          { id: 'harry-me',      emoji: '☕', name: 'Coffee at Harry & Me',      desc: 'Much-loved Hepburn Springs cafe — excellent coffee and breakfast',                                tag: 'Cafe',       img: IMG.coffee,    maps: 'https://maps.google.com/?q=Harry+and+Me+Hepburn+Springs+Victoria' },
+          { id: 'frank-connie-morn', emoji: '🥐', name: 'Frank & Connie\'s',    desc: 'Hepburn Springs neighbourhood favourite for breakfast & morning coffee',                           tag: 'Cafe',       img: IMG.coffee,    maps: 'https://maps.google.com/?q=Frank+and+Connies+Hepburn+Springs+Victoria' },
+          { id: 'mineral-springs', emoji: '💧', name: 'Mineral Springs Walk',   desc: 'Taste the different natural mineral springs dotted around the region — quirky & fun',              tag: 'Unique',     img: P('mineral-springs-daylesford'), maps: 'https://maps.google.com/?q=Hepburn+Mineral+Springs+Reserve+Victoria' },
+          { id: 'hepburn-walk',  emoji: '🥾', name: 'Hepburn Springs Trail',    desc: '30–40 min bush walk connecting Daylesford & Hepburn Springs through beautiful parkland',           tag: 'Walk',       img: P('hepburn-trail-bushwalk'),      maps: 'https://maps.google.com/?q=Hepburn+Regional+Park+Victoria' },
+          { id: 'wombat-hill-sun', emoji: '🌳', name: 'Wombat Hill Botanic Gardens', desc: 'Peaceful morning stroll through historic gardens',                                             tag: 'Nature',     img: IMG.wombat,    maps: 'https://maps.google.com/?q=Wombat+Hill+Botanic+Gardens+Daylesford+Victoria' },
         ]
       },
       {
-        time: '🍴  Lunch',
-        id: 'lunch',
+        time: '🍴  Lunch', id: 'lunch',
         items: [
-          { id: 'chocolate-mill', emoji: '🍫', name: 'The Chocolate Mill', desc: 'Watch chocolatiers at work, hot chocolate, cake & handmade sweets', tag: 'Cafe' },
-          { id: 'farmers-arms', emoji: '🍺', name: 'Farmers Arms Hotel', desc: '165-year-old pub with a produce-driven menu & impressive regional wine list', tag: 'Pub Lunch' },
-          { id: 'surly-goat-lunch', emoji: '🐐', name: 'The Surly Goat', desc: 'Craft beer, great food & relaxed vibes in Hepburn Springs', tag: 'Casual' },
-          { id: 'cliffys-sun', emoji: '🥗', name: 'Cliffy\'s Emporium', desc: 'Fresh seasonal dishes in a cosy Daylesford favourite', tag: 'Casual' },
+          { id: 'chocolate-mill', emoji: '🍫', name: 'The Chocolate Mill',       desc: 'Watch chocolatiers at work, hot chocolate, cake & handmade sweets',                               tag: 'Cafe',       img: P('chocolate-mill-daylesford'),   maps: 'https://maps.google.com/?q=The+Chocolate+Mill+Daylesford+Victoria' },
+          { id: 'farmers-arms',  emoji: '🍺', name: 'Farmers Arms Hotel',        desc: '165-year-old pub with a produce-driven menu & impressive regional wine list',                     tag: 'Pub Lunch',  img: P('farmers-arms-hotel-daylesford'), maps: 'https://maps.google.com/?q=Farmers+Arms+Hotel+Daylesford+Victoria' },
+          { id: 'surly-goat-lunch', emoji: '🐐', name: 'The Surly Goat',         desc: 'Craft beer, great food & relaxed vibes in Hepburn Springs',                                       tag: 'Casual',     img: P('surly-goat-hepburn'),          maps: 'https://maps.google.com/?q=The+Surly+Goat+Hepburn+Springs+Victoria' },
+          { id: 'cliffys-sun',   emoji: '🥗', name: 'Cliffy\'s Emporium',        desc: 'Fresh seasonal dishes in a cosy Daylesford favourite',                                            tag: 'Casual',     img: P('cliffys-emporium-daylesford'), maps: 'https://maps.google.com/?q=Cliffy%27s+Emporium+Daylesford+Victoria' },
         ]
       },
       {
-        time: '☕  Afternoon',
-        id: 'afternoon',
+        time: '☕  Afternoon', id: 'afternoon',
         items: [
-          { id: 'hepburn-spa-sun', emoji: '♨️', name: 'Hepburn Bathhouse & Spa', desc: 'Freshly renovated with private bathing rooms, mineral pools & spa treatments. Book ahead!', tag: '⭐ Top Pick', hot: true },
-          { id: 'lake-house-spa', emoji: '🧖', name: 'The Spa at Lake House', desc: 'Iconic luxury spa on the edge of Lake Daylesford, established 1984', tag: 'Spa' },
-          { id: 'passing-clouds', emoji: '🍷', name: 'Passing Clouds Winery', desc: 'Chardonnay & pinot on a gorgeous sun-drenched deck — one of the region\'s best', tag: 'Winery' },
-          { id: 'paramoor', emoji: '🍾', name: 'Paramoor Winery', desc: 'Minimal intervention wines — elegant pinot noir & riesling in a beautiful setting', tag: 'Winery' },
-          { id: 'daylesford-cider', emoji: '🍏', name: 'Daylesford Cider', desc: 'Handcrafted ciders in an English-style tavern cellar amid picturesque orchards', tag: 'Tasting' },
-          { id: 'peppermint-sun', emoji: '🌿', name: 'Peppermint Springs Retreat', desc: 'Peaceful day spa with treatments and mineral soaking pools', tag: 'Spa' },
+          { id: 'hepburn-spa-sun', emoji: '♨️', name: 'Hepburn Bathhouse & Spa', desc: 'Freshly renovated with private bathing rooms, mineral pools & spa treatments. Book ahead!',      tag: '⭐ Top Pick', hot: true, img: IMG.bathhouse, maps: 'https://maps.google.com/?q=Hepburn+Bathhouse+and+Spa+Hepburn+Springs+Victoria' },
+          { id: 'lake-house-spa', emoji: '🧖', name: 'The Spa at Lake House',    desc: 'Iconic luxury spa on the edge of Lake Daylesford, established 1984',                              tag: 'Spa',        img: P('lake-house-spa-daylesford'),   maps: 'https://maps.google.com/?q=The+Spa+at+Lake+House+Daylesford+Victoria' },
+          { id: 'passing-clouds', emoji: '🍷', name: 'Passing Clouds Winery',    desc: 'Chardonnay & pinot on a gorgeous sun-drenched deck — one of the region\'s best',                  tag: 'Winery',     img: P('passing-clouds-winery-musk'),  maps: 'https://maps.google.com/?q=Passing+Clouds+Winery+Musk+Victoria' },
+          { id: 'paramoor',      emoji: '🍾', name: 'Paramoor Winery',           desc: 'Minimal intervention wines — elegant pinot noir & riesling in a beautiful setting',               tag: 'Winery',     img: P('paramoor-winery-daylesford'),  maps: 'https://maps.google.com/?q=Paramoor+Winery+Daylesford+Victoria' },
+          { id: 'daylesford-cider', emoji: '🍏', name: 'Daylesford Cider',       desc: 'Handcrafted ciders in an English-style tavern cellar amid picturesque orchards',                  tag: 'Tasting',    img: P('daylesford-cider-orchard'),    maps: 'https://maps.google.com/?q=Daylesford+Cider+Company+Victoria' },
+          { id: 'peppermint-sun', emoji: '🌿', name: 'Peppermint Springs Retreat', desc: 'Peaceful day spa with treatments and mineral soaking pools',                                    tag: 'Spa',        img: P('peppermint-springs-retreat'),  maps: 'https://maps.google.com/?q=Peppermint+Springs+Retreat+Daylesford+Victoria' },
         ]
       },
       {
-        time: '🌙  Evening',
-        id: 'evening',
+        time: '🌙  Evening', id: 'evening',
         items: [
-          { id: 'sakana', emoji: '🍱', name: 'Sakana', desc: 'Japanese-inspired dining — a much-loved Daylesford favourite', tag: 'Dining' },
-          { id: 'kadota', emoji: '🌙', name: 'Kadota', desc: 'Modern Asian cuisine — elegant and consistently delicious', tag: 'Dining' },
-          { id: 'bistro-terroir', emoji: '🥩', name: 'Bistro Terroir', desc: 'French-inspired bistro celebrating local produce with a great wine list', tag: 'Dining' },
-          { id: 'lake-house-sun', emoji: '🍽️', name: 'Lake House Restaurant', desc: 'If you saved it for tonight — worth every cent. Book well ahead.', tag: '⭐ Top Pick', hot: true },
-          { id: 'boathouse-sun', emoji: '⛵', name: 'Boathouse Restaurant', desc: 'Relaxed lakeside dinner with a lovely evening atmosphere', tag: 'Dining' },
+          { id: 'sakana',        emoji: '🍱', name: 'Sakana',                    desc: 'Japanese-inspired dining — a much-loved Daylesford favourite',                                    tag: 'Dining',     img: P('sakana-daylesford-restaurant'),maps: 'https://maps.google.com/?q=Sakana+Daylesford+Victoria' },
+          { id: 'kadota',        emoji: '🌙', name: 'Kadota',                    desc: 'Modern Asian cuisine — elegant and consistently delicious',                                        tag: 'Dining',     img: P('kadota-daylesford'),           maps: 'https://maps.google.com/?q=Kadota+Daylesford+Victoria' },
+          { id: 'bistro-terroir', emoji: '🥩', name: 'Bistro Terroir',           desc: 'French-inspired bistro celebrating local produce with a great wine list',                         tag: 'Dining',     img: P('bistro-terroir-daylesford'),   maps: 'https://maps.google.com/?q=Bistro+Terroir+Daylesford+Victoria' },
+          { id: 'lake-house-sun', emoji: '🍽️', name: 'Lake House Restaurant',   desc: 'If you saved it for tonight — worth every cent. Book well ahead.',                               tag: '⭐ Top Pick', hot: true, img: P('lake-house-restaurant-daylesford'), maps: 'https://maps.google.com/?q=Lake+House+Restaurant+Daylesford+Victoria' },
+          { id: 'boathouse-sun', emoji: '⛵', name: 'Boathouse Restaurant',      desc: 'Relaxed lakeside dinner with a lovely evening atmosphere',                                        tag: 'Dining',     img: IMG.boathouse, maps: 'https://maps.google.com/?q=Boathouse+Restaurant+Daylesford+Victoria' },
         ]
       }
     ]
@@ -533,33 +385,28 @@ const DAYS = [
     note: 'Leaving afternoon',
     slots: [
       {
-        time: '🌅  Morning',
-        id: 'morning',
+        time: '🌅  Morning', id: 'morning',
         items: [
-          { id: 'lake-walk-mon', emoji: '🚶', name: 'Lake Daylesford Walk', desc: 'A peaceful lakeside walk to start the final morning', tag: 'Nature' },
-          { id: 'convent-mon', emoji: '🎨', name: 'The Convent Gallery', desc: 'Explore the seven gallery spaces, chapel & museum before heading home', tag: 'Culture' },
-          { id: 'mill-markets-mon', emoji: '🏺', name: 'Mill Markets', desc: 'Last chance for antique treasures before hitting the road', tag: 'Shopping' },
-          { id: 'hepburn-walk-mon', emoji: '🥾', name: 'Hepburn Springs Trail', desc: 'A final morning walk through the Hepburn Regional Park', tag: 'Walk' },
-          { id: 'peppermint-mon', emoji: '🌿', name: 'Peppermint Springs Spa', desc: 'One last treatment to carry the relaxation home with you', tag: 'Spa' },
+          { id: 'lake-walk-mon', emoji: '🚶', name: 'Lake Daylesford Walk',      desc: 'A peaceful lakeside walk to start the final morning',                                              tag: 'Nature',     img: IMG.lake,      maps: 'https://maps.google.com/?q=Lake+Daylesford+Victoria' },
+          { id: 'convent-mon',   emoji: '🎨', name: 'The Convent Gallery',       desc: 'Explore the seven gallery spaces, chapel & museum before heading home',                           tag: 'Culture',    img: P('convent-daylesford'),    maps: 'https://maps.google.com/?q=The+Convent+Gallery+Daylesford+Victoria' },
+          { id: 'mill-markets-mon', emoji: '🏺', name: 'Mill Markets',           desc: 'Last chance for antique treasures before hitting the road',                                        tag: 'Shopping',   img: P('mill-markets-daylesford'), maps: 'https://maps.google.com/?q=The+Mill+Markets+Daylesford+Victoria' },
+          { id: 'hepburn-walk-mon', emoji: '🥾', name: 'Hepburn Springs Trail', desc: 'A final morning walk through the Hepburn Regional Park',                                           tag: 'Walk',       img: P('hepburn-trail-bushwalk'),  maps: 'https://maps.google.com/?q=Hepburn+Regional+Park+Victoria' },
+          { id: 'peppermint-mon', emoji: '🌿', name: 'Peppermint Springs Spa',   desc: 'One last treatment to carry the relaxation home with you',                                        tag: 'Spa',        img: P('peppermint-springs-retreat'), maps: 'https://maps.google.com/?q=Peppermint+Springs+Retreat+Daylesford+Victoria' },
         ]
       },
       {
-        time: '🥞  Brunch (before heading off)',
-        id: 'brunch',
+        time: '🥞  Brunch (before heading off)', id: 'brunch',
         items: [
-          { id: 'frank-connie-mon', emoji: '🥐', name: 'Frank & Connie\'s', desc: 'The perfect farewell brunch spot in Hepburn Springs', tag: 'Cafe' },
-          { id: 'surly-goat-mon', emoji: '🐐', name: 'The Surly Goat', desc: 'Relaxed brunch with good coffee before the drive back to Melbourne', tag: 'Casual' },
-          { id: 'cliffys-mon', emoji: '🥗', name: 'Cliffy\'s Emporium', desc: 'Great brunch in central Daylesford to fuel the drive home', tag: 'Cafe' },
-          { id: 'chocolate-mill-mon', emoji: '🍫', name: 'The Chocolate Mill', desc: 'Sweet send-off — hot chocolate & pastries before the road', tag: 'Cafe' },
-          { id: 'boathouse-mon', emoji: '⛵', name: 'Boathouse Brunch', desc: 'A lovely lakeside farewell with beautiful views', tag: 'Dining' },
+          { id: 'frank-connie-mon', emoji: '🥐', name: 'Frank & Connie\'s',     desc: 'The perfect farewell brunch spot in Hepburn Springs',                                             tag: 'Cafe',       img: IMG.coffee,    maps: 'https://maps.google.com/?q=Frank+and+Connies+Hepburn+Springs+Victoria' },
+          { id: 'surly-goat-mon', emoji: '🐐', name: 'The Surly Goat',          desc: 'Relaxed brunch with good coffee before the drive back to Melbourne',                               tag: 'Casual',     img: P('surly-goat-hepburn'),     maps: 'https://maps.google.com/?q=The+Surly+Goat+Hepburn+Springs+Victoria' },
+          { id: 'cliffys-mon',   emoji: '🥗', name: 'Cliffy\'s Emporium',       desc: 'Great brunch in central Daylesford to fuel the drive home',                                       tag: 'Cafe',       img: P('cliffys-emporium-daylesford'), maps: 'https://maps.google.com/?q=Cliffy%27s+Emporium+Daylesford+Victoria' },
+          { id: 'chocolate-mill-mon', emoji: '🍫', name: 'The Chocolate Mill',   desc: 'Sweet send-off — hot chocolate & pastries before the road',                                      tag: 'Cafe',       img: P('chocolate-mill-daylesford'), maps: 'https://maps.google.com/?q=The+Chocolate+Mill+Daylesford+Victoria' },
+          { id: 'boathouse-mon', emoji: '⛵', name: 'Boathouse Brunch',          desc: 'A lovely lakeside farewell with beautiful views',                                                 tag: 'Dining',     img: IMG.boathouse, maps: 'https://maps.google.com/?q=Boathouse+Restaurant+Daylesford+Victoria' },
         ]
       }
     ]
   }
 ];
-
-// ─── CONFIG ─────────────────────────────────────────────────
-const DISCORD_WEBHOOK = 'YOUR_WEBHOOK_URL_HERE';
 
 // ─── STATE ──────────────────────────────────────────────────
 const selected = new Set();
@@ -569,7 +416,6 @@ function init() {
   DAYS.forEach((day, i) => renderPanel(day, i));
   updateCountdown();
   updatePlan();
-
 }
 
 function renderPanel(day, i) {
@@ -586,16 +432,24 @@ function renderPanel(day, i) {
     slot.items.forEach(item => {
       html += `
         <div class="card" id="card-${item.id}" onclick="toggle('${item.id}')">
-          <div class="card-icon">${item.emoji}</div>
-          <div class="card-body">
-            <div class="card-name">${item.name}</div>
-            <div class="card-desc">${item.desc}</div>
-            <span class="card-tag${item.hot ? ' hot' : ''}">${item.tag}</span>
-          </div>
-          <div class="card-check">
-            <svg class="check-icon" viewBox="0 0 10 8" fill="none">
-              <path d="M1 4l3 3 5-6" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
-            </svg>
+          <img class="card-img" src="${item.img}" loading="lazy" alt="${item.name}"
+               onerror="this.style.display='none'">
+          <div class="card-inner">
+            <div class="card-icon">${item.emoji}</div>
+            <div class="card-body">
+              <div class="card-name">${item.name}</div>
+              <div class="card-desc">${item.desc}</div>
+              <div class="card-footer">
+                <span class="card-tag${item.hot ? ' hot' : ''}">${item.tag}</span>
+                <a class="card-maps" href="${item.maps}" target="_blank" rel="noopener"
+                   onclick="event.stopPropagation()">📍 Directions</a>
+              </div>
+            </div>
+            <div class="card-check">
+              <svg class="check-icon" viewBox="0 0 10 8" fill="none">
+                <path d="M1 4l3 3 5-6" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </div>
           </div>
         </div>
       `;
@@ -634,19 +488,14 @@ function updateCountdown() {
 
 function updatePlan() {
   const total = selected.size;
-
-  // Tab badge
   const badge = document.getElementById('plan-badge');
   const sub = document.getElementById('plan-tab-sub');
   sub.textContent = `${total} picked`;
   badge.textContent = total;
   badge.classList.toggle('hidden', total === 0);
-
-  // Count text
   document.getElementById('count-text').textContent =
     `${total} ${total === 1 ? 'activity' : 'activities'} selected`;
 
-  // Plan content
   const container = document.getElementById('plan-content');
   let html = '';
 
@@ -654,7 +503,7 @@ function updatePlan() {
     const picks = [];
     day.slots.forEach(slot => {
       slot.items.filter(a => selected.has(a.id)).forEach(a => {
-        picks.push({ emoji: a.emoji, name: a.name, slotTime: slot.time });
+        picks.push({ emoji: a.emoji, name: a.name, maps: a.maps, slotTime: slot.time });
       });
     });
 
@@ -672,6 +521,10 @@ function updatePlan() {
               <div class="plan-item-name">${p.name}</div>
               <div class="plan-item-slot">${p.slotTime.replace(/[^\w\s]/g, '').trim()}</div>
             </div>
+            <a href="${p.maps}" target="_blank" rel="noopener"
+               style="font-size:11px;font-weight:700;color:var(--muted);text-decoration:none;flex-shrink:0">
+              📍
+            </a>
           </div>
         `;
       });
@@ -711,9 +564,7 @@ async function sendPlan() {
     };
   });
 
-  if (notes) {
-    fields.push({ name: '📝 Notes', value: notes, inline: false });
-  }
+  if (notes) fields.push({ name: '📝 Notes', value: notes, inline: false });
 
   const payload = {
     username: 'Daylesford Planner 🌿',
@@ -733,11 +584,7 @@ async function sendPlan() {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(payload)
     });
-    if (res.ok || res.status === 204) {
-      showToast('✅ Plan sent to Discord!');
-    } else {
-      showToast('❌ Send failed — check the webhook URL');
-    }
+    showToast(res.ok || res.status === 204 ? '✅ Plan sent to Discord!' : '❌ Send failed — check webhook URL');
   } catch {
     showToast('❌ Network error — try again');
   } finally {
@@ -745,7 +592,6 @@ async function sendPlan() {
     btn.textContent = 'Send Plan to Discord 🚀';
   }
 }
-
 
 // ─── TOAST ───────────────────────────────────────────────────
 function showToast(msg) {
