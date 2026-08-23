@@ -290,20 +290,40 @@
 // ─── CONFIG ─────────────────────────────────────────────────
 const DISCORD_WEBHOOK = 'YOUR_WEBHOOK_URL_HERE';
 
-// ─── Wikimedia Commons images (real Daylesford photos) ──────
+// ─── IMAGE SOURCES ───────────────────────────────────────────
+// Wikimedia Commons (open license, real Daylesford photos)
 const WM = 'https://upload.wikimedia.org/wikipedia/commons/';
-const IMG = {
-  lake:     WM + '4/48/Daylesford_Lake_Victoria_Australia_%287085530203%29.jpg',
-  wombat:   WM + '9/92/Wombat_Hill_Botanic_Gardens_tower.jpg',
-  mainst:   WM + 'e/e8/Main_Street%2C_Daylesford.jpg',
-  market:   WM + '8/84/Daylesford_Sunday_Market.jpg',
-  coffee:   WM + 'd/d8/Coffee_Time%2C_Daylesford%2C_Victoria_Australia_%284826478686%29.jpg',
-  bathhouse:WM + '2/26/Bathhouse_hepburn_springs.jpg',
-  boathouse:WM + '3/36/Aerial_perspective_of_Daylesford_Boathouse.jpg',
-};
+const lake      = WM + '4/48/Daylesford_Lake_Victoria_Australia_%287085530203%29.jpg';
+const wombat    = WM + '9/92/Wombat_Hill_Botanic_Gardens_tower.jpg';
+const mainst    = WM + 'e/e8/Main_Street%2C_Daylesford.jpg';
+const market    = WM + '8/84/Daylesford_Sunday_Market.jpg';
+const convent   = WM + '0/07/Daylesford_Convent_Gallery_006.JPG';
+const coffee    = WM + 'd/d8/Coffee_Time%2C_Daylesford%2C_Victoria_Australia_%284826478686%29.jpg';
+const locarno   = WM + 'b/be/Locarno_and_the_pavilion.jpg';   // Hepburn mineral springs pavillion
+const blowhole  = WM + '5/5c/Hepburn_springs_blowhole.jpg';   // Hepburn Springs nature/trail
 
-// Seeded picsum for everything else (consistent per seed)
-const P = s => `https://picsum.photos/seed/${s}/800/400`;
+// Official venue websites
+const bathhouse  = 'https://hepburnbathhouse.com/wp-content/uploads/sites/11/2025/12/HepburnBS-PAV-8368-1024x683.jpg';
+const boathouse  = 'https://www.boathousedaylesford.com.au/application/files/7517/6648/7991/Daylesford_Boathouse_2025-12-18-73-hero.webp';
+const lhRest     = 'https://lakehouse.com.au/wp-content/uploads/2018/12/Lake-House-Waterfront-Pavilion-3.jpg';
+const lhSpa      = 'https://lakehouse.com.au/wp-content/uploads/2022/08/LHSpa21-5497-e1693299777686.jpg';
+const farmersArms= 'https://images.squarespace-cdn.com/content/v1/5d6db312c858a7000123b4c2/1646304006471-WPD813IRVIUB8GCDXIDO/farmers+arms+hotel+daylesford.jpg';
+const surlyGoat  = 'https://images.squarespace-cdn.com/content/v1/67971bb1a6feec712337200a/066135f4-7b21-47ea-87cb-e4dcdaf469a9/surly-goat-dining.jpg';
+const dlHotel    = 'https://images.squarespace-cdn.com/content/v1/67337a71434d3120b31b5bab/9f9b0586-4a68-4c77-b672-a1039f380d21/Daylesford-Hotel-Copyright-Richard-Cornish-2024.jpg';
+const paramoor   = 'https://www.paramoor.com.au/wp-content/uploads/2025/08/DJI_0867-1-1024x767.jpg';
+const passClouds = 'https://fusws.api.aspedia.io/passingclouds-website/cellar-door/PassingClouds-016.jpg?preset=carousel-image__lowres&t=1686710021283';
+const peppermint = 'https://www.peppermintsprings.com.au/content/slideshow/full/Peppermint-Springs-Retreat-and-Day-Spa_1.jpg';
+const millMkts   = 'https://www.millmarkets.com.au/wp-content/uploads/2024/02/IMG_7372-Large-225x300.jpeg';
+
+// TripAdvisor CDN (user-submitted photos of the actual venues)
+const TA = 'https://dynamic-media-cdn.tripadvisor.com/media/photo-';
+const cliffys    = TA + 'o/13/19/ca/90/cliffy-s-emporium.jpg?w=900&h=500&s=1';
+const kadota     = TA + 'o/26/af/19/57/osuimono.jpg?w=900&h=500&s=1';
+const terroir    = TA + 'o/12/49/5a/46/photo1jpg.jpg?w=900&h=500&s=1';
+const chocMill   = TA + 's/02/d1/0d/73/chocolate-mill.jpg?w=600&h=400&s=1';
+const dlCider    = TA + 'o/16/94/7c/70/photo-credit-turnaroundhere.jpg?w=1200&h=900&s=1';
+const frankConnie= TA + 'o/2c/72/09/1e/caption.jpg?w=400&h=400&s=1';    // Frank & Connie's area
+const harrys     = TA + 'o/1a/86/db/63/hepburn-pavilion.jpg?w=400&h=-1&s=1'; // Harry's Hepburn area
 
 // ─── DATA ───────────────────────────────────────────────────
 const DAYS = [
@@ -314,21 +334,21 @@ const DAYS = [
       {
         time: '☀️  Afternoon', id: 'afternoon',
         items: [
-          { id: 'vincent-st',    emoji: '🛍️', name: 'Vincent Street',           desc: 'Browse boutiques, galleries & specialty shops along Daylesford\'s charming main street',         tag: 'Explore',    img: IMG.mainst,    maps: 'https://maps.google.com/?q=Vincent+Street+Daylesford+VIC' },
-          { id: 'lake-walk-sat', emoji: '🚶', name: 'Lake Daylesford Walk',      desc: 'Easy, peaceful lakeside loop — perfect first impression of the town',                             tag: 'Nature',     img: IMG.lake,      maps: 'https://maps.google.com/?q=Lake+Daylesford+Victoria' },
-          { id: 'convent-sat',   emoji: '🎨', name: 'The Convent Gallery',       desc: 'Seven art galleries, chapel & museum in a stunning former convent building',                       tag: 'Culture',    img: P('convent-daylesford'),    maps: 'https://maps.google.com/?q=The+Convent+Gallery+Daylesford+Victoria' },
-          { id: 'mill-markets-sat', emoji: '🏺', name: 'The Mill Markets',       desc: 'One of Australia\'s biggest antique & vintage markets — great for a browse',                       tag: 'Shopping',   img: P('mill-markets-daylesford'), maps: 'https://maps.google.com/?q=The+Mill+Markets+Daylesford+Victoria' },
-          { id: 'wombat-hill-sat', emoji: '🌳', name: 'Wombat Hill Botanic Gardens', desc: 'Historic gardens with sweeping panoramic views over the countryside',                          tag: 'Nature',     img: IMG.wombat,    maps: 'https://maps.google.com/?q=Wombat+Hill+Botanic+Gardens+Daylesford+Victoria' },
+          { id: 'vincent-st',      emoji: '🛍️', name: 'Vincent Street',               desc: 'Browse boutiques, galleries & specialty shops along Daylesford\'s charming main street',          tag: 'Explore',    img: mainst,      maps: 'https://maps.google.com/?q=Vincent+Street+Daylesford+VIC' },
+          { id: 'lake-walk-sat',   emoji: '🚶', name: 'Lake Daylesford Walk',           desc: 'Easy, peaceful lakeside loop — perfect first impression of the town',                              tag: 'Nature',     img: lake,        maps: 'https://maps.google.com/?q=Lake+Daylesford+Victoria' },
+          { id: 'convent-sat',     emoji: '🎨', name: 'The Convent Gallery',            desc: 'Seven art galleries, chapel & museum in a stunning former convent building',                        tag: 'Culture',    img: convent,     maps: 'https://maps.google.com/?q=The+Convent+Gallery+Daylesford+Victoria' },
+          { id: 'mill-markets-sat',emoji: '🏺', name: 'The Mill Markets',              desc: 'One of Australia\'s biggest antique & vintage markets — great for a browse',                        tag: 'Shopping',   img: millMkts,    maps: 'https://maps.google.com/?q=The+Mill+Markets+Daylesford+Victoria' },
+          { id: 'wombat-hill-sat', emoji: '🌳', name: 'Wombat Hill Botanic Gardens',   desc: 'Historic gardens with sweeping panoramic views over the countryside',                               tag: 'Nature',     img: wombat,      maps: 'https://maps.google.com/?q=Wombat+Hill+Botanic+Gardens+Daylesford+Victoria' },
         ]
       },
       {
         time: '🌙  Evening', id: 'evening',
         items: [
-          { id: 'lake-house-sat', emoji: '🍽️', name: 'Lake House Restaurant',   desc: 'Iconic fine dining on the lake edge — Daylesford\'s most celebrated restaurant. Book ahead!',   tag: '⭐ Top Pick', hot: true, img: P('lake-house-restaurant-daylesford'), maps: 'https://maps.google.com/?q=Lake+House+Restaurant+Daylesford+Victoria' },
-          { id: 'boathouse-sat', emoji: '⛵', name: 'Boathouse Restaurant',      desc: 'Lakeside dining with a relaxed atmosphere and beautiful water views',                              tag: 'Dining',     img: IMG.boathouse, maps: 'https://maps.google.com/?q=Boathouse+Restaurant+Daylesford+Victoria' },
-          { id: 'cliffys-sat',   emoji: '🥗', name: 'Cliffy\'s Emporium',       desc: 'Beloved local favourite with fresh, seasonal dishes in a cosy setting',                            tag: 'Casual',     img: P('cliffys-emporium-daylesford'), maps: 'https://maps.google.com/?q=Cliffy%27s+Emporium+Daylesford+Victoria' },
-          { id: 'daylesford-hotel-sat', emoji: '🏠', name: 'Daylesford Hotel',   desc: 'Classic country pub with good food and a warm, welcoming atmosphere',                             tag: 'Pub',        img: P('daylesford-hotel-pub'),         maps: 'https://maps.google.com/?q=Daylesford+Hotel+Victoria' },
-          { id: 'hepburn-bath-sat', emoji: '♨️', name: 'Hepburn Bathhouse — Evening Soak', desc: 'Unwind in the mineral pools after the drive — the perfect way to arrive in spa country', tag: 'Spa',        img: IMG.bathhouse, maps: 'https://maps.google.com/?q=Hepburn+Bathhouse+and+Spa+Hepburn+Springs+Victoria' },
+          { id: 'lake-house-sat',  emoji: '🍽️', name: 'Lake House Restaurant',        desc: 'Iconic fine dining on the lake edge — Daylesford\'s most celebrated restaurant. Book ahead!',    tag: '⭐ Top Pick', hot: true, img: lhRest,  maps: 'https://maps.google.com/?q=Lake+House+Restaurant+Daylesford+Victoria' },
+          { id: 'boathouse-sat',   emoji: '⛵', name: 'Boathouse Restaurant',          desc: 'Lakeside dining with a relaxed atmosphere and beautiful water views',                               tag: 'Dining',     img: boathouse,   maps: 'https://maps.google.com/?q=Boathouse+Restaurant+Daylesford+Victoria' },
+          { id: 'cliffys-sat',     emoji: '🥗', name: 'Cliffy\'s Emporium',            desc: 'Beloved local favourite with fresh, seasonal dishes in a cosy setting',                             tag: 'Casual',     img: cliffys,     maps: 'https://maps.google.com/?q=Cliffy%27s+Emporium+Daylesford+Victoria' },
+          { id: 'daylesford-hotel-sat', emoji: '🏠', name: 'Daylesford Hotel',         desc: 'Classic country pub with good food, a beer garden, wood-fired pizza & sunset balcony views',      tag: 'Pub',        img: dlHotel,     maps: 'https://maps.google.com/?q=Daylesford+Hotel+Victoria' },
+          { id: 'hepburn-bath-sat',emoji: '♨️', name: 'Hepburn Bathhouse — Evening Soak', desc: 'Unwind in the mineral pools after the drive — the perfect way to arrive in spa country',      tag: 'Spa',        img: bathhouse,   maps: 'https://maps.google.com/?q=Hepburn+Bathhouse+and+Spa+Hepburn+Springs+Victoria' },
         ]
       }
     ]
@@ -340,42 +360,42 @@ const DAYS = [
       {
         time: '☀️  Morning', id: 'morning',
         items: [
-          { id: 'sunday-market', emoji: '🛒', name: 'Daylesford Sunday Market',  desc: 'Fresh produce, artisan goods & local crafts every Sunday morning — don\'t miss it!',             tag: '⭐ Top Pick', hot: true, img: IMG.market,   maps: 'https://maps.google.com/?q=Daylesford+Sunday+Market+Victoria' },
-          { id: 'harry-me',      emoji: '☕', name: 'Coffee at Harry & Me',      desc: 'Much-loved Hepburn Springs cafe — excellent coffee and breakfast',                                tag: 'Cafe',       img: IMG.coffee,    maps: 'https://maps.google.com/?q=Harry+and+Me+Hepburn+Springs+Victoria' },
-          { id: 'frank-connie-morn', emoji: '🥐', name: 'Frank & Connie\'s',    desc: 'Hepburn Springs neighbourhood favourite for breakfast & morning coffee',                           tag: 'Cafe',       img: IMG.coffee,    maps: 'https://maps.google.com/?q=Frank+and+Connies+Hepburn+Springs+Victoria' },
-          { id: 'mineral-springs', emoji: '💧', name: 'Mineral Springs Walk',   desc: 'Taste the different natural mineral springs dotted around the region — quirky & fun',              tag: 'Unique',     img: P('mineral-springs-daylesford'), maps: 'https://maps.google.com/?q=Hepburn+Mineral+Springs+Reserve+Victoria' },
-          { id: 'hepburn-walk',  emoji: '🥾', name: 'Hepburn Springs Trail',    desc: '30–40 min bush walk connecting Daylesford & Hepburn Springs through beautiful parkland',           tag: 'Walk',       img: P('hepburn-trail-bushwalk'),      maps: 'https://maps.google.com/?q=Hepburn+Regional+Park+Victoria' },
-          { id: 'wombat-hill-sun', emoji: '🌳', name: 'Wombat Hill Botanic Gardens', desc: 'Peaceful morning stroll through historic gardens',                                             tag: 'Nature',     img: IMG.wombat,    maps: 'https://maps.google.com/?q=Wombat+Hill+Botanic+Gardens+Daylesford+Victoria' },
+          { id: 'sunday-market',   emoji: '🛒', name: 'Daylesford Sunday Market',      desc: 'Fresh produce, artisan goods & local crafts every Sunday morning — don\'t miss it!',              tag: '⭐ Top Pick', hot: true, img: market,  maps: 'https://maps.google.com/?q=Daylesford+Sunday+Market+Victoria' },
+          { id: 'harry-me',        emoji: '☕', name: 'Harry\'s Hepburn',              desc: 'Much-loved Hepburn Springs cafe — excellent coffee and breakfast',                                 tag: 'Cafe',       img: harrys,      maps: 'https://maps.google.com/?q=Harry%27s+Hepburn+Hepburn+Springs+Victoria' },
+          { id: 'frank-connie-morn', emoji: '🥐', name: 'Frank & Connie\'s Kitchen',  desc: 'Hepburn Springs neighbourhood favourite — fresh seasonal dishes drawing on French, Greek & Middle Eastern cuisines', tag: 'Cafe', img: frankConnie, maps: 'https://maps.google.com/?q=Frank+and+Connies+Kitchen+Hepburn+Springs+Victoria' },
+          { id: 'mineral-springs', emoji: '💧', name: 'Mineral Springs Walk',         desc: 'Taste the different natural mineral springs at the historic Locarno Pavilion reserve — quirky & fun', tag: 'Unique',  img: locarno,     maps: 'https://maps.google.com/?q=Hepburn+Mineral+Springs+Reserve+Victoria' },
+          { id: 'hepburn-walk',    emoji: '🥾', name: 'Hepburn Springs Trail',        desc: '30–40 min bush walk connecting Daylesford & Hepburn Springs through beautiful parkland',            tag: 'Walk',       img: blowhole,    maps: 'https://maps.google.com/?q=Hepburn+Regional+Park+Victoria' },
+          { id: 'wombat-hill-sun', emoji: '🌳', name: 'Wombat Hill Botanic Gardens',  desc: 'Peaceful morning stroll through historic gardens',                                                  tag: 'Nature',     img: wombat,      maps: 'https://maps.google.com/?q=Wombat+Hill+Botanic+Gardens+Daylesford+Victoria' },
         ]
       },
       {
         time: '🍴  Lunch', id: 'lunch',
         items: [
-          { id: 'chocolate-mill', emoji: '🍫', name: 'The Chocolate Mill',       desc: 'Watch chocolatiers at work, hot chocolate, cake & handmade sweets',                               tag: 'Cafe',       img: P('chocolate-mill-daylesford'),   maps: 'https://maps.google.com/?q=The+Chocolate+Mill+Daylesford+Victoria' },
-          { id: 'farmers-arms',  emoji: '🍺', name: 'Farmers Arms Hotel',        desc: '165-year-old pub with a produce-driven menu & impressive regional wine list',                     tag: 'Pub Lunch',  img: P('farmers-arms-hotel-daylesford'), maps: 'https://maps.google.com/?q=Farmers+Arms+Hotel+Daylesford+Victoria' },
-          { id: 'surly-goat-lunch', emoji: '🐐', name: 'The Surly Goat',         desc: 'Craft beer, great food & relaxed vibes in Hepburn Springs',                                       tag: 'Casual',     img: P('surly-goat-hepburn'),          maps: 'https://maps.google.com/?q=The+Surly+Goat+Hepburn+Springs+Victoria' },
-          { id: 'cliffys-sun',   emoji: '🥗', name: 'Cliffy\'s Emporium',        desc: 'Fresh seasonal dishes in a cosy Daylesford favourite',                                            tag: 'Casual',     img: P('cliffys-emporium-daylesford'), maps: 'https://maps.google.com/?q=Cliffy%27s+Emporium+Daylesford+Victoria' },
+          { id: 'chocolate-mill',  emoji: '🍫', name: 'The Chocolate Mill',            desc: 'Watch chocolatiers at work, hot chocolate, cake & handmade sweets — 10 min drive from town',     tag: 'Cafe',       img: chocMill,    maps: 'https://maps.google.com/?q=The+Chocolate+Mill+Mount+Franklin+Victoria' },
+          { id: 'farmers-arms',    emoji: '🍺', name: 'Farmers Arms Hotel',            desc: '165-year-old pub with a produce-driven menu & impressive regional wine list',                      tag: 'Pub Lunch',  img: farmersArms, maps: 'https://maps.google.com/?q=Farmers+Arms+Hotel+Daylesford+Victoria' },
+          { id: 'surly-goat-lunch',emoji: '🐐', name: 'The Surly Goat',               desc: 'Craft beer, great food & relaxed vibes in Hepburn Springs',                                        tag: 'Casual',     img: surlyGoat,   maps: 'https://maps.google.com/?q=The+Surly+Goat+Hepburn+Springs+Victoria' },
+          { id: 'cliffys-sun',     emoji: '🥗', name: 'Cliffy\'s Emporium',            desc: 'Fresh seasonal dishes in a cosy Daylesford favourite',                                             tag: 'Casual',     img: cliffys,     maps: 'https://maps.google.com/?q=Cliffy%27s+Emporium+Daylesford+Victoria' },
         ]
       },
       {
         time: '☕  Afternoon', id: 'afternoon',
         items: [
-          { id: 'hepburn-spa-sun', emoji: '♨️', name: 'Hepburn Bathhouse & Spa', desc: 'Freshly renovated with private bathing rooms, mineral pools & spa treatments. Book ahead!',      tag: '⭐ Top Pick', hot: true, img: IMG.bathhouse, maps: 'https://maps.google.com/?q=Hepburn+Bathhouse+and+Spa+Hepburn+Springs+Victoria' },
-          { id: 'lake-house-spa', emoji: '🧖', name: 'The Spa at Lake House',    desc: 'Iconic luxury spa on the edge of Lake Daylesford, established 1984',                              tag: 'Spa',        img: P('lake-house-spa-daylesford'),   maps: 'https://maps.google.com/?q=The+Spa+at+Lake+House+Daylesford+Victoria' },
-          { id: 'passing-clouds', emoji: '🍷', name: 'Passing Clouds Winery',    desc: 'Chardonnay & pinot on a gorgeous sun-drenched deck — one of the region\'s best',                  tag: 'Winery',     img: P('passing-clouds-winery-musk'),  maps: 'https://maps.google.com/?q=Passing+Clouds+Winery+Musk+Victoria' },
-          { id: 'paramoor',      emoji: '🍾', name: 'Paramoor Winery',           desc: 'Minimal intervention wines — elegant pinot noir & riesling in a beautiful setting',               tag: 'Winery',     img: P('paramoor-winery-daylesford'),  maps: 'https://maps.google.com/?q=Paramoor+Winery+Daylesford+Victoria' },
-          { id: 'daylesford-cider', emoji: '🍏', name: 'Daylesford Cider',       desc: 'Handcrafted ciders in an English-style tavern cellar amid picturesque orchards',                  tag: 'Tasting',    img: P('daylesford-cider-orchard'),    maps: 'https://maps.google.com/?q=Daylesford+Cider+Company+Victoria' },
-          { id: 'peppermint-sun', emoji: '🌿', name: 'Peppermint Springs Retreat', desc: 'Peaceful day spa with treatments and mineral soaking pools',                                    tag: 'Spa',        img: P('peppermint-springs-retreat'),  maps: 'https://maps.google.com/?q=Peppermint+Springs+Retreat+Daylesford+Victoria' },
+          { id: 'hepburn-spa-sun', emoji: '♨️', name: 'Hepburn Bathhouse & Spa',      desc: 'Freshly renovated with private bathing rooms, mineral pools & spa treatments. Book ahead!',       tag: '⭐ Top Pick', hot: true, img: bathhouse, maps: 'https://maps.google.com/?q=Hepburn+Bathhouse+and+Spa+Hepburn+Springs+Victoria' },
+          { id: 'lake-house-spa',  emoji: '🧖', name: 'The Spa at Lake House',         desc: 'Iconic luxury spa on the edge of Lake Daylesford, established 1984',                               tag: 'Spa',        img: lhSpa,       maps: 'https://maps.google.com/?q=The+Spa+at+Lake+House+Daylesford+Victoria' },
+          { id: 'passing-clouds',  emoji: '🍷', name: 'Passing Clouds Winery',         desc: 'Chardonnay & pinot on a gorgeous sun-drenched deck — one of the region\'s best',                  tag: 'Winery',     img: passClouds,  maps: 'https://maps.google.com/?q=Passing+Clouds+Winery+Musk+Victoria' },
+          { id: 'paramoor',        emoji: '🍾', name: 'Paramoor Winery',               desc: 'Minimal intervention wines — elegant pinot noir & riesling in a beautiful setting',                tag: 'Winery',     img: paramoor,    maps: 'https://maps.google.com/?q=Paramoor+Winery+Daylesford+Victoria' },
+          { id: 'daylesford-cider',emoji: '🍏', name: 'Daylesford Cider',              desc: 'Handcrafted ciders in an English-style tavern cellar amid picturesque orchards',                   tag: 'Tasting',    img: dlCider,     maps: 'https://maps.google.com/?q=Daylesford+Cider+Company+Musk+Victoria' },
+          { id: 'peppermint-sun',  emoji: '🌿', name: 'Peppermint Springs Retreat',    desc: 'Peaceful day spa with treatments and mineral soaking pools',                                        tag: 'Spa',        img: peppermint,  maps: 'https://maps.google.com/?q=Peppermint+Springs+Retreat+Daylesford+Victoria' },
         ]
       },
       {
         time: '🌙  Evening', id: 'evening',
         items: [
-          { id: 'sakana',        emoji: '🍱', name: 'Sakana',                    desc: 'Japanese-inspired dining — a much-loved Daylesford favourite',                                    tag: 'Dining',     img: P('sakana-daylesford-restaurant'),maps: 'https://maps.google.com/?q=Sakana+Daylesford+Victoria' },
-          { id: 'kadota',        emoji: '🌙', name: 'Kadota',                    desc: 'Modern Asian cuisine — elegant and consistently delicious',                                        tag: 'Dining',     img: P('kadota-daylesford'),           maps: 'https://maps.google.com/?q=Kadota+Daylesford+Victoria' },
-          { id: 'bistro-terroir', emoji: '🥩', name: 'Bistro Terroir',           desc: 'French-inspired bistro celebrating local produce with a great wine list',                         tag: 'Dining',     img: P('bistro-terroir-daylesford'),   maps: 'https://maps.google.com/?q=Bistro+Terroir+Daylesford+Victoria' },
-          { id: 'lake-house-sun', emoji: '🍽️', name: 'Lake House Restaurant',   desc: 'If you saved it for tonight — worth every cent. Book well ahead.',                               tag: '⭐ Top Pick', hot: true, img: P('lake-house-restaurant-daylesford'), maps: 'https://maps.google.com/?q=Lake+House+Restaurant+Daylesford+Victoria' },
-          { id: 'boathouse-sun', emoji: '⛵', name: 'Boathouse Restaurant',      desc: 'Relaxed lakeside dinner with a lovely evening atmosphere',                                        tag: 'Dining',     img: IMG.boathouse, maps: 'https://maps.google.com/?q=Boathouse+Restaurant+Daylesford+Victoria' },
+          { id: 'kadota',          emoji: '🌙', name: 'Kadota',                         desc: 'Exquisite Japanese degustation using seasonal local ingredients — Daylesford\'s finest dining experience', tag: '⭐ Top Pick', hot: true, img: kadota, maps: 'https://maps.google.com/?q=Kadota+Restaurant+Daylesford+Victoria' },
+          { id: 'bistro-terroir',  emoji: '🥩', name: 'Bistro Terroir',                desc: 'French-inspired neighbourhood bistro celebrating local produce — ranked #2 in Daylesford',       tag: 'Dining',     img: terroir,     maps: 'https://maps.google.com/?q=Bistro+Terroir+Daylesford+Victoria' },
+          { id: 'lake-house-sun',  emoji: '🍽️', name: 'Lake House Restaurant',        desc: 'If you saved it for tonight — two chef hats, worth every cent. Book well ahead.',                  tag: '⭐ Top Pick', hot: true, img: lhRest, maps: 'https://maps.google.com/?q=Lake+House+Restaurant+Daylesford+Victoria' },
+          { id: 'boathouse-sun',   emoji: '⛵', name: 'Boathouse Restaurant',          desc: 'Relaxed lakeside dinner with a lovely evening atmosphere',                                          tag: 'Dining',     img: boathouse,   maps: 'https://maps.google.com/?q=Boathouse+Restaurant+Daylesford+Victoria' },
+          { id: 'cliffys-dinner',  emoji: '🥗', name: 'Cliffy\'s Emporium',            desc: 'Fresh seasonal dinner at a Daylesford institution',                                                 tag: 'Casual',     img: cliffys,     maps: 'https://maps.google.com/?q=Cliffy%27s+Emporium+Daylesford+Victoria' },
         ]
       }
     ]
@@ -387,21 +407,21 @@ const DAYS = [
       {
         time: '🌅  Morning', id: 'morning',
         items: [
-          { id: 'lake-walk-mon', emoji: '🚶', name: 'Lake Daylesford Walk',      desc: 'A peaceful lakeside walk to start the final morning',                                              tag: 'Nature',     img: IMG.lake,      maps: 'https://maps.google.com/?q=Lake+Daylesford+Victoria' },
-          { id: 'convent-mon',   emoji: '🎨', name: 'The Convent Gallery',       desc: 'Explore the seven gallery spaces, chapel & museum before heading home',                           tag: 'Culture',    img: P('convent-daylesford'),    maps: 'https://maps.google.com/?q=The+Convent+Gallery+Daylesford+Victoria' },
-          { id: 'mill-markets-mon', emoji: '🏺', name: 'Mill Markets',           desc: 'Last chance for antique treasures before hitting the road',                                        tag: 'Shopping',   img: P('mill-markets-daylesford'), maps: 'https://maps.google.com/?q=The+Mill+Markets+Daylesford+Victoria' },
-          { id: 'hepburn-walk-mon', emoji: '🥾', name: 'Hepburn Springs Trail', desc: 'A final morning walk through the Hepburn Regional Park',                                           tag: 'Walk',       img: P('hepburn-trail-bushwalk'),  maps: 'https://maps.google.com/?q=Hepburn+Regional+Park+Victoria' },
-          { id: 'peppermint-mon', emoji: '🌿', name: 'Peppermint Springs Spa',   desc: 'One last treatment to carry the relaxation home with you',                                        tag: 'Spa',        img: P('peppermint-springs-retreat'), maps: 'https://maps.google.com/?q=Peppermint+Springs+Retreat+Daylesford+Victoria' },
+          { id: 'lake-walk-mon',   emoji: '🚶', name: 'Lake Daylesford Walk',           desc: 'A peaceful lakeside walk to start the final morning',                                              tag: 'Nature',     img: lake,        maps: 'https://maps.google.com/?q=Lake+Daylesford+Victoria' },
+          { id: 'convent-mon',     emoji: '🎨', name: 'The Convent Gallery',            desc: 'Explore the seven gallery spaces, chapel & museum before heading home',                            tag: 'Culture',    img: convent,     maps: 'https://maps.google.com/?q=The+Convent+Gallery+Daylesford+Victoria' },
+          { id: 'mill-markets-mon',emoji: '🏺', name: 'Mill Markets',                  desc: 'Last chance for antique treasures before hitting the road',                                         tag: 'Shopping',   img: millMkts,    maps: 'https://maps.google.com/?q=The+Mill+Markets+Daylesford+Victoria' },
+          { id: 'hepburn-walk-mon',emoji: '🥾', name: 'Hepburn Springs Trail',         desc: 'A final morning walk through the Hepburn Regional Park',                                           tag: 'Walk',       img: blowhole,    maps: 'https://maps.google.com/?q=Hepburn+Regional+Park+Victoria' },
+          { id: 'peppermint-mon',  emoji: '🌿', name: 'Peppermint Springs Spa',         desc: 'One last treatment to carry the relaxation home with you',                                         tag: 'Spa',        img: peppermint,  maps: 'https://maps.google.com/?q=Peppermint+Springs+Retreat+Daylesford+Victoria' },
         ]
       },
       {
         time: '🥞  Brunch (before heading off)', id: 'brunch',
         items: [
-          { id: 'frank-connie-mon', emoji: '🥐', name: 'Frank & Connie\'s',     desc: 'The perfect farewell brunch spot in Hepburn Springs',                                             tag: 'Cafe',       img: IMG.coffee,    maps: 'https://maps.google.com/?q=Frank+and+Connies+Hepburn+Springs+Victoria' },
-          { id: 'surly-goat-mon', emoji: '🐐', name: 'The Surly Goat',          desc: 'Relaxed brunch with good coffee before the drive back to Melbourne',                               tag: 'Casual',     img: P('surly-goat-hepburn'),     maps: 'https://maps.google.com/?q=The+Surly+Goat+Hepburn+Springs+Victoria' },
-          { id: 'cliffys-mon',   emoji: '🥗', name: 'Cliffy\'s Emporium',       desc: 'Great brunch in central Daylesford to fuel the drive home',                                       tag: 'Cafe',       img: P('cliffys-emporium-daylesford'), maps: 'https://maps.google.com/?q=Cliffy%27s+Emporium+Daylesford+Victoria' },
-          { id: 'chocolate-mill-mon', emoji: '🍫', name: 'The Chocolate Mill',   desc: 'Sweet send-off — hot chocolate & pastries before the road',                                      tag: 'Cafe',       img: P('chocolate-mill-daylesford'), maps: 'https://maps.google.com/?q=The+Chocolate+Mill+Daylesford+Victoria' },
-          { id: 'boathouse-mon', emoji: '⛵', name: 'Boathouse Brunch',          desc: 'A lovely lakeside farewell with beautiful views',                                                 tag: 'Dining',     img: IMG.boathouse, maps: 'https://maps.google.com/?q=Boathouse+Restaurant+Daylesford+Victoria' },
+          { id: 'frank-connie-mon',emoji: '🥐', name: 'Frank & Connie\'s Kitchen',     desc: 'The perfect farewell brunch spot in Hepburn Springs',                                             tag: 'Cafe',       img: frankConnie, maps: 'https://maps.google.com/?q=Frank+and+Connies+Kitchen+Hepburn+Springs+Victoria' },
+          { id: 'surly-goat-mon',  emoji: '🐐', name: 'The Surly Goat',               desc: 'Relaxed brunch with good coffee before the drive back to Melbourne',                                tag: 'Casual',     img: surlyGoat,   maps: 'https://maps.google.com/?q=The+Surly+Goat+Hepburn+Springs+Victoria' },
+          { id: 'cliffys-mon',     emoji: '🥗', name: 'Cliffy\'s Emporium',            desc: 'Great brunch in central Daylesford to fuel the drive home',                                        tag: 'Cafe',       img: cliffys,     maps: 'https://maps.google.com/?q=Cliffy%27s+Emporium+Daylesford+Victoria' },
+          { id: 'chocolate-mill-mon', emoji: '🍫', name: 'The Chocolate Mill',         desc: 'Sweet send-off — hot chocolate & pastries before the road',                                        tag: 'Cafe',       img: chocMill,    maps: 'https://maps.google.com/?q=The+Chocolate+Mill+Mount+Franklin+Victoria' },
+          { id: 'boathouse-mon',   emoji: '⛵', name: 'Boathouse Brunch',              desc: 'A lovely lakeside farewell with beautiful views',                                                   tag: 'Dining',     img: boathouse,   maps: 'https://maps.google.com/?q=Boathouse+Restaurant+Daylesford+Victoria' },
         ]
       }
     ]
