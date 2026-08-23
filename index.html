@@ -55,21 +55,6 @@
       margin-top: 3px;
     }
 
-    .settings-btn {
-      background: rgba(255,255,255,0.18);
-      border: none;
-      color: white;
-      width: 34px;
-      height: 34px;
-      border-radius: 50%;
-      cursor: pointer;
-      font-size: 15px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      flex-shrink: 0;
-      -webkit-tap-highlight-color: transparent;
-    }
 
     .countdown {
       display: flex;
@@ -373,81 +358,6 @@
       padding-bottom: 8px;
     }
 
-    /* ─── Modal ─── */
-    .overlay {
-      position: fixed;
-      inset: 0;
-      background: rgba(0,0,0,0.45);
-      z-index: 500;
-      display: flex;
-      align-items: flex-end;
-      justify-content: center;
-      backdrop-filter: blur(3px);
-      -webkit-backdrop-filter: blur(3px);
-    }
-
-    .overlay.hidden { display: none; }
-
-    .modal {
-      background: white;
-      border-radius: 22px 22px 0 0;
-      padding: 24px 20px 44px;
-      width: 100%;
-      max-width: 500px;
-      animation: slideUp 0.28s cubic-bezier(0.34, 1.4, 0.64, 1);
-    }
-
-    @keyframes slideUp {
-      from { transform: translateY(100%); }
-      to { transform: translateY(0); }
-    }
-
-    .modal-handle {
-      width: 36px;
-      height: 4px;
-      background: #e0e0e0;
-      border-radius: 2px;
-      margin: 0 auto 20px;
-    }
-
-    .modal-title { font-size: 20px; font-weight: 800; margin-bottom: 8px; }
-    .modal-desc { font-size: 14px; color: #666; line-height: 1.55; margin-bottom: 20px; }
-
-    .modal input[type="url"] {
-      width: 100%;
-      border: 2px solid var(--border);
-      border-radius: 12px;
-      padding: 13px 14px;
-      font-size: 14px;
-      font-family: inherit;
-      color: var(--text);
-      margin-bottom: 12px;
-    }
-
-    .modal input:focus { outline: none; border-color: var(--green); }
-
-    .modal-btn {
-      width: 100%;
-      background: var(--green);
-      color: white;
-      border: none;
-      border-radius: 12px;
-      padding: 15px;
-      font-size: 15px;
-      font-weight: 700;
-      cursor: pointer;
-    }
-
-    .modal-skip {
-      width: 100%;
-      background: none;
-      border: none;
-      color: var(--muted);
-      font-size: 14px;
-      padding: 14px;
-      cursor: pointer;
-      font-family: inherit;
-    }
 
     /* ─── Toast ─── */
     .toast {
@@ -479,7 +389,7 @@
       <div class="header-title">🌿 Daylesford</div>
       <div class="header-sub">Victoria's Spa Country</div>
     </div>
-    <button class="settings-btn" onclick="openSettings()">⚙️</button>
+    <div style="width:34px"></div>
   </div>
   <div class="countdown">
     <div class="countdown-num" id="countdown-num">—</div>
@@ -530,20 +440,6 @@
   <div class="submit-section">
     <button class="send-btn" onclick="sendPlan()" id="send-btn">Send Plan to Discord 🚀</button>
     <div class="count-text" id="count-text">0 activities selected</div>
-  </div>
-</div>
-
-<!-- ─── Setup Modal ─── -->
-<div class="overlay" id="setup-modal">
-  <div class="modal">
-    <div class="modal-handle"></div>
-    <div class="modal-title">👋 One quick thing</div>
-    <div class="modal-desc">
-      Paste your Discord webhook URL below and your plan will be sent there. The URL is saved only on this device — never sent anywhere else.
-    </div>
-    <input type="url" id="webhook-input" placeholder="https://discord.com/api/webhooks/..." />
-    <button class="modal-btn" onclick="saveWebhook()">Save & Start Planning</button>
-    <button class="modal-skip" onclick="closeSetup()">Skip for now</button>
   </div>
 </div>
 
@@ -662,6 +558,9 @@ const DAYS = [
   }
 ];
 
+// ─── CONFIG ─────────────────────────────────────────────────
+const DISCORD_WEBHOOK = 'YOUR_WEBHOOK_URL_HERE';
+
 // ─── STATE ──────────────────────────────────────────────────
 const selected = new Set();
 
@@ -671,10 +570,6 @@ function init() {
   updateCountdown();
   updatePlan();
 
-  const webhook = localStorage.getItem('discord_webhook');
-  if (!webhook) {
-    document.getElementById('setup-modal').classList.remove('hidden');
-  }
 }
 
 function renderPanel(day, i) {
@@ -790,8 +685,11 @@ function updatePlan() {
 
 // ─── DISCORD ─────────────────────────────────────────────────
 async function sendPlan() {
-  const webhook = localStorage.getItem('discord_webhook');
-  if (!webhook) { openSettings(); return; }
+  const webhook = DISCORD_WEBHOOK;
+  if (!webhook || webhook === 'YOUR_WEBHOOK_URL_HERE') {
+    showToast('⚠️ Add your webhook URL to the code first');
+    return;
+  }
 
   const btn = document.getElementById('send-btn');
   btn.disabled = true;
@@ -848,34 +746,6 @@ async function sendPlan() {
   }
 }
 
-// ─── WEBHOOK SETUP ───────────────────────────────────────────
-function openSettings() {
-  const modal = document.getElementById('setup-modal');
-  const input = document.getElementById('webhook-input');
-  modal.classList.remove('hidden');
-  const saved = localStorage.getItem('discord_webhook');
-  if (saved) input.value = saved;
-}
-
-function closeSetup() {
-  document.getElementById('setup-modal').classList.add('hidden');
-}
-
-function saveWebhook() {
-  const url = document.getElementById('webhook-input').value.trim();
-  if (!url.includes('discord.com/api/webhooks/') && !url.includes('discordapp.com/api/webhooks/')) {
-    showToast('⚠️ Please enter a valid Discord webhook URL');
-    return;
-  }
-  localStorage.setItem('discord_webhook', url);
-  closeSetup();
-  showToast('✅ Webhook saved!');
-}
-
-// close modal on backdrop tap
-document.getElementById('setup-modal').addEventListener('click', function(e) {
-  if (e.target === this) closeSetup();
-});
 
 // ─── TOAST ───────────────────────────────────────────────────
 function showToast(msg) {
