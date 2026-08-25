@@ -1,0 +1,10 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /trips/{tripId} {
+      allow read: if true;
+      allow create: if true; // lets the very first page load bootstrap the doc
+      allow update: if request.resource.data.passphrase == "THE_CHOSEN_PASSPHRASE";
+    }
+  }
+}

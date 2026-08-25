@@ -315,17 +315,7 @@
     textarea::placeholder { color: #ccc; }
 
     .submit-section { padding: 14px 12px 0; }
-    .send-btn {
-      width: 100%;
-      background: linear-gradient(135deg, var(--green-dark), var(--green));
-      color: white; border: none; border-radius: 14px;
-      padding: 17px; font-size: 16px; font-weight: 800; cursor: pointer;
-      -webkit-tap-highlight-color: transparent; transition: opacity 0.15s;
-      letter-spacing: 0.2px;
-    }
-    .send-btn:active { opacity: 0.85; }
-    .send-btn:disabled { background: #ccc; cursor: not-allowed; }
-    .count-text { text-align: center; font-size: 13px; color: var(--muted); margin-top: 10px; padding-bottom: 8px; }
+    .count-text { text-align: center; font-size: 13px; color: var(--muted); margin-top: 4px; padding-bottom: 8px; }
 
     /* ─── Toast ─── */
     .toast {
@@ -388,7 +378,7 @@
 <div class="panel" id="panel-3">
   <div class="plan-intro">
     <div class="plan-title">Your Weekend Plan</div>
-    <div class="plan-sub">Drag ⠿ to reorder or move between days, add your own, then send to Discord</div>
+    <div class="plan-sub">Drag ⠿ to reorder or move between days, add your own — changes save automatically</div>
     <div class="view-toggle">
       <button class="view-toggle-btn active" id="view-toggle-list" onclick="setViewMode('list')">📋 List</button>
       <button class="view-toggle-btn" id="view-toggle-timeline" onclick="setViewMode('timeline')">🕐 Timeline</button>
@@ -398,11 +388,11 @@
   <div id="plan-content"></div>
   <div class="notes-section">
     <div class="section-label" style="margin-top:16px">Trip Notes</div>
-    <textarea id="trip-notes" rows="4" placeholder="Anything to remember, questions, ideas..."></textarea>
+    <textarea id="trip-notes" rows="4" placeholder="Anything to remember, questions, ideas..." oninput="scheduleSave()"></textarea>
   </div>
   <div class="submit-section">
-    <button class="send-btn" onclick="sendPlan()" id="send-btn">Send Plan to Discord 🚀</button>
     <div class="count-text" id="count-text">0 activities selected</div>
+    <div class="count-text" id="sync-status">Synced</div>
   </div>
 </div>
 
@@ -411,9 +401,25 @@
 
 <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.2/Sortable.min.js"></script>
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-<script>
+<script type="module">
+import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.14.1/firebase-app.js';
+import { getFirestore, doc, getDoc, setDoc } from 'https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js';
+
 // ─── CONFIG ─────────────────────────────────────────────────
-const DISCORD_WEBHOOK = 'YOUR_WEBHOOK_URL_HERE';
+// Fill these in after creating a Firebase project (see README.md).
+const FIREBASE_CONFIG = {
+  apiKey: 'YOUR_API_KEY',
+  authDomain: 'YOUR_PROJECT.firebaseapp.com',
+  projectId: 'YOUR_PROJECT',
+  storageBucket: 'YOUR_PROJECT.appspot.com',
+  messagingSenderId: 'YOUR_SENDER_ID',
+  appId: 'YOUR_APP_ID',
+};
+const TRIP_DOC_PATH = 'trips/daylesford';
+
+const firebaseApp = initializeApp(FIREBASE_CONFIG);
+const db = getFirestore(firebaseApp);
+const tripDocRef = doc(db, TRIP_DOC_PATH);
 
 // ─── IMAGE SOURCES ───────────────────────────────────────────
 // Wikimedia Commons (open license, real Daylesford photos)
@@ -678,11 +684,83 @@ let dayStart = ['13:30', '10:30', '08:00']; // editable per-day start time, "HH:
 let mapDay = 0; // which day's route the Map view is showing
 let leafletMap = null;
 
+// ─── PERSISTENCE ────────────────────────────────────────────
+let saveTimer = null;
+
+function getPassphrase() {
+  let pass = localStorage.getItem('tripPassphrase');
+  if (!pass) {
+    pass = prompt('Enter the trip passphrase to save changes:') || '';
+    if (pass) localStorage.setItem('tripPassphrase', pass);
+  }
+  return pass;
+}
+
+function setSyncStatus(text) {
+  const el = document.getElementById('sync-status');
+  if (el) el.textContent = text;
+}
+
+async function loadState() {
+  try {
+    const snap = await getDoc(tripDocRef);
+    if (snap.exists()) {
+      hydrateState(snap.data());
+    } else {
+      seedDefaultPlan();
+      await saveState();
+    }
+  } catch (err) {
+    console.error('Failed to load trip state, falling back to defaults', err);
+    seedDefaultPlan();
+    setSyncStatus('⚠️ Could not load saved plan');
+  }
+}
+
+function hydrateState(data) {
+  selected.clear();
+  (data.selected || []).forEach(id => selected.add(id));
+  plan = data.plan || [];
+  customCounter = data.customCounter || 0;
+  dayStart = data.dayStart || dayStart;
+  const notesEl = document.getElementById('trip-notes');
+  if (notesEl) notesEl.value = data.tripNotes || '';
+}
+
+function scheduleSave() {
+  clearTimeout(saveTimer);
+  setSyncStatus('Saving…');
+  saveTimer = setTimeout(saveState, 600);
+}
+
+async function saveState() {
+  const payload = {
+    selected: Array.from(selected),
+    plan,
+    customCounter,
+    dayStart,
+    tripNotes: document.getElementById('trip-notes')?.value ?? '',
+    passphrase: getPassphrase(),
+    updatedAt: Date.now(),
+  };
+  try {
+    await setDoc(tripDocRef, payload);
+    setSyncStatus('✓ Saved');
+  } catch (err) {
+    console.error('Save failed', err);
+    if (err.code === 'permission-denied') {
+      localStorage.removeItem('tripPassphrase');
+      showToast('❌ Wrong passphrase — try your change again');
+    }
+    setSyncStatus('⚠️ Save failed');
+  }
+}
+
 // ─── INIT ───────────────────────────────────────────────────
-function init() {
-  seedDefaultPlan();
-  DAYS.forEach((day, i) => renderPanel(day, i));
+async function init() {
   updateCountdown();
+  await loadState();
+  DAYS.forEach((day, i) => renderPanel(day, i));
   updatePlan();
 }
 
@@ -778,6 +856,7 @@ function toggle(id) {
     }
   }
   updatePlan();
+  scheduleSave();
 }
 
 function addCustomActivity(day) {
@@ -791,6 +870,7 @@ function addCustomActivity(day) {
   plan.push({ uid, catalogId: null, day, emoji: '⭐', name, maps: null, slotTime: null, duration, area: null, custom: true });
   input.value = '';
   updatePlan();
+  scheduleSave();
   const newInput = document.getElementById(`custom-input-${day}`);
   if (newInput) newInput.focus();
 }
@@ -805,6 +885,7 @@ function removePlanItem(uid) {
     if (card) card.classList.remove('selected');
   }
   updatePlan();
+  scheduleSave();
 }
 
 // Rebuild `plan` (order + day) from the actual DOM after a drag finishes.
@@ -822,6 +903,7 @@ function syncPlanOrder() {
   });
   plan = newPlan;
   updatePlan();
+  scheduleSave();
 }
 
 function initSortables() {
@@ -844,6 +926,7 @@ function setDayStart(dayIdx, value) {
   if (!value) return;
   dayStart[dayIdx] = value;
   updatePlan();
+  scheduleSave();
 }
 
 function setViewMode(mode) {
@@ -1060,61 +1143,6 @@ function updatePlan() {
   if (viewMode === 'list') initSortables();
 }
 
-// ─── DISCORD ─────────────────────────────────────────────────
-async function sendPlan() {
-  const webhook = DISCORD_WEBHOOK;
-  if (!webhook || webhook === 'YOUR_WEBHOOK_URL_HERE') {
-    showToast('⚠️ Add your webhook URL to the code first');
-    return;
-  }
-
-  const btn = document.getElementById('send-btn');
-  btn.disabled = true;
-  btn.textContent = 'Sending...';
-
-  const notes = document.getElementById('trip-notes').value.trim();
-
-  const fields = DAYS.map((day, dayIdx) => {
-    const schedule = computeSchedule(dayIdx);
-    const picks = schedule.map(p =>
-      `${formatClock(p.start)}–${formatClock(p.end)} ${p.emoji} **${p.name}**${p.custom ? ' _(custom)_' : ''}`
-    );
-    return {
-      name: `📅 ${day.label}`,
-      value: picks.length > 0 ? picks.join('\n') : '_Nothing selected_',
-      inline: false
-    };
-  });
-
-  if (notes) fields.push({ name: '📝 Notes', value: notes, inline: false });
-
-  const payload = {
-    username: 'Daylesford Planner 🌿',
-    embeds: [{
-      title: '🌿 Daylesford Weekend Plan',
-      description: '**Aug 29–31 · Victoria\'s Spa Country**\n\nHere\'s what we\'re thinking for the trip!',
-      color: 0x2d6348,
-      fields,
-      footer: { text: 'Sent from the Daylesford Trip Planner' },
-      timestamp: new Date().toISOString()
-    }]
-  };
-
-  try {
-    const res = await fetch(webhook, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(payload)
-    });
-    showToast(res.ok || res.status === 204 ? '✅ Plan sent to Discord!' : '❌ Send failed — check webhook URL');
-  } catch {
-    showToast('❌ Network error — try again');
-  } finally {
-    btn.disabled = false;
-    btn.textContent = 'Send Plan to Discord 🚀';
-  }
-}
-
 // ─── TOAST ───────────────────────────────────────────────────
 function showToast(msg) {
   const t = document.getElementById('toast');
@@ -1124,6 +1152,10 @@ function showToast(msg) {
 }
 
 // ─── START ───────────────────────────────────────────────────
+Object.assign(window, {
+  switchTab, toggle, addCustomActivity, removePlanItem,
+  setDayStart, setViewMode, setMapDay, scheduleSave
+});
 init();
 </script>
 </body>
